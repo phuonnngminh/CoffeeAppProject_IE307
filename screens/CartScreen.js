@@ -7,6 +7,7 @@ import {
   Dimensions,
   Platform,
   FlatList,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
@@ -24,17 +25,44 @@ export default function CartScreen() {
   const navigation = useNavigation();
 
   const setQuantity = (cartItem, newQuantity) => {
+    if (newQuantity === 0) {
+      handleRemoveProduct(cartItem);
+    }
     const newListProductCart = [];
     listProductCart.forEach((oldCartItem) => {
       if (
         oldCartItem.item.id == cartItem.item.id &&
         oldCartItem.size == cartItem.size
       ) {
-        oldCartItem.quantity += 1;
+        oldCartItem.quantity = newQuantity;
       }
       newListProductCart.push(oldCartItem);
     });
     setListProductCart(newListProductCart);
+  };
+
+  const handleRemoveProduct = (cartItem) => {
+    Alert.alert(
+      "",
+      "Are you sure you want to remove this product?",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            const updatedItems = listProductCart.filter(
+              (item) => item.item.id !== cartItem.item.id
+            );
+            setListProductCart(updatedItems);
+            // calculateTotalPrice();
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
@@ -65,8 +93,10 @@ export default function CartScreen() {
             <ArrowLeftCircleIcon size={50} strokeWidth={1.2} color="white" />
           </TouchableOpacity>
         </View>
-        <View style={{ paddingHorizontal: 4, spaceY: 2 }}>
-          <Text style={{ fontSize: 40, color: "white" }}>Shopping Cart</Text>
+        <View style={{ paddingHorizontal: 5, spaceY: 2 }}>
+          <Text style={{ fontSize: 40, color: "white", marginLeft: 10 }}>
+            Shopping Cart
+          </Text>
         </View>
         <View className="mt-5 mb-10">
           <FlatList
@@ -75,6 +105,7 @@ export default function CartScreen() {
               <CoffeeCart
                 cartItem={item}
                 setQuantity={(quantity) => setQuantity(item, quantity)}
+                handleRemoveProduct={handleRemoveProduct}
               />
             )}
             style={{ height: "100%" }}

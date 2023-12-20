@@ -194,7 +194,7 @@ export default function ProductDetailsScreen({ route }) {
             </Text>
           </View>
           {/* UpDownButton */}
-          <UpDownButton count={quantity} setCount={setQuantity} />
+          <UpDownButton count={quantity} setCount={setQuantity} color={themeColors.text} borderColor={"gray"}/>
         </View>
         {/* buy now button */}
         <View className="flex-row justify-between px-4">
