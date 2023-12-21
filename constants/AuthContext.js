@@ -4,8 +4,11 @@ const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [listProductCart, setListProductCart] = useState([]);
+
+  const [favouriteItems, setFavouriteItems] = useState([]);
+
   return (
-    <AuthContext.Provider value={{ listProductCart, setListProductCart }}>
+    <AuthContext.Provider value={{ listProductCart, setListProductCart, favouriteItems, setFavouriteItems }}>
       {children}
     </AuthContext.Provider>
   );
