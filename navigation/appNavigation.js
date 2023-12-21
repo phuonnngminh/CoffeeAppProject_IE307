@@ -22,6 +22,9 @@ import { useContext } from "react";
 import { AuthContext } from "../constants/AuthContext";
 import { useState } from "react";
 
+import FavouritesScreen from "../screens/FavouritesScreen";
+import PaymentScreen from "../screens/PaymentScreen";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const ios = Platform.OS == "ios";
@@ -59,6 +62,7 @@ export default function AppNavigation() {
         <Stack.Screen name="Product Details" options={{ headerShown: false }}>
           {({ route }) => <ProductDetailsScreen route={route} />}
         </Stack.Screen>
+        <Stack.Screen name="Payment" component={PaymentScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -88,7 +92,7 @@ function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
       })}
     >
       <Tab.Screen name="home">{() => <HomeScreen />}</Tab.Screen>
-      <Tab.Screen name="favourite" component={HomeScreen} />
+      <Tab.Screen name="favourite" component={FavouritesScreen} />
       <Tab.Screen
         name="cart"
         options={{
