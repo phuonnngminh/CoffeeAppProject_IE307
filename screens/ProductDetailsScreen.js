@@ -6,7 +6,7 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,6 +27,19 @@ export default function ProductDetailsScreen({ route }) {
   const [size, setSize] = useState("small");
   const [quantity, setQuantity] = useState(1);
   const count = listProductCart.length;
+
+  const {favouriteItems, setFavouriteItems} = useContext(AuthContext);
+  const [isLiked, setIsLiked] = useState(false);
+
+  const ToggleFavourites = (item) => {
+    // console.log('doing add favorites');
+    if (isLiked) {
+      setFavouriteItems(favouriteItems.filter((prevItem) => prevItem.id !== item.id));
+      
+    } else {
+      setFavouriteItems([...favouriteItems, item]);
+    }
+  }
 
   const handleAddToCart = (item, selectedSize, selectedQuantity) => {
     const existingCartItemIndex = listProductCart.findIndex(
@@ -56,6 +69,13 @@ export default function ProductDetailsScreen({ route }) {
     console.log("Added to cart");
   };
 
+  useEffect(() => {
+    const isItemLiked = favouriteItems.some((favItem) => favItem.id === item.id);
+    setIsLiked(isItemLiked);
+    // console.log("is item in favourites: ",isItemLiked);
+
+  }, [favouriteItems]);
+
   return (
     <View className="flex-1">
       <StatusBar style="light" />
@@ -77,8 +97,12 @@ export default function ProductDetailsScreen({ route }) {
             <ArrowLeftCircleIcon size="50" strokeWidth={1.2} color="white" />
           </TouchableOpacity>
 
-          <TouchableOpacity className=" rounded-full border-2 border-white p-2">
-            <HeartIcon size="24" color="white" />
+          <TouchableOpacity 
+            className={`rounded-full border-2 p-2 ${
+              isLiked ? 'border-red-500' : 'border-white'
+            }` }
+            onPress={() => ToggleFavourites(item)}>
+              <HeartIcon size="24" color={isLiked ? 'red' : 'white'} /> 
           </TouchableOpacity>
         </View>
         <View

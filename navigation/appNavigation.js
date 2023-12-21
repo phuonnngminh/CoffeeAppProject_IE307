@@ -23,6 +23,9 @@ import { AuthContext } from "../constants/AuthContext";
 import { useState } from "react";
 import PaymentScreen from "../screens/PaymentScreen";
 
+import FavouritesScreen from "../screens/FavouritesScreen";
+import PaymentScreen from "../screens/PaymentScreen";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const ios = Platform.OS == "ios";
@@ -90,7 +93,7 @@ function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
       })}
     >
       <Tab.Screen name="home">{() => <HomeScreen />}</Tab.Screen>
-      <Tab.Screen name="favourite" component={HomeScreen} />
+      <Tab.Screen name="favourite" component={FavouritesScreen} />
       <Tab.Screen
         name="cart"
         options={{
