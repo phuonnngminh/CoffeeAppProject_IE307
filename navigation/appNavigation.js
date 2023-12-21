@@ -21,6 +21,7 @@ import ProductDetailsScreen from "../screens/ProductDetailsScreen";
 import { useContext } from "react";
 import { AuthContext } from "../constants/AuthContext";
 import { useState } from "react";
+import PaymentScreen from "../screens/PaymentScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,6 +60,7 @@ export default function AppNavigation() {
         <Stack.Screen name="Product Details" options={{ headerShown: false }}>
           {({ route }) => <ProductDetailsScreen route={route} />}
         </Stack.Screen>
+        <Stack.Screen name="Payment" component={PaymentScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

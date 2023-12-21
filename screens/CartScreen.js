@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 import CoffeeCart from "../components/coffeeCart";
 import { AuthContext } from "../constants/AuthContext";
 import { themeColors } from "../theme";
+import { ArrowRight } from "react-native-feather";
 
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
@@ -39,6 +40,29 @@ export default function CartScreen() {
       newListProductCart.push(oldCartItem);
     });
     setListProductCart(newListProductCart);
+  };
+
+  const calculateTotalPrice = (cartItem) => {
+    let total = 0;
+    listProductCart.forEach((cartItem) => {
+      total = total + cartItem.quantity * cartItem.item.price;
+    });
+    return total;
+  };
+
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [listProductCart]);
+
+  const onUpdateQuantity = (cartItem, newQuantity) => {
+    const updatedItems = listProductCart.map((item) => {
+      if (item.id === cartItem.item.id) {
+        item.quantity = newQuantity;
+      }
+      return item;
+    });
+    setListProductCart(updatedItems);
+    calculateTotalPrice();
   };
 
   const handleRemoveProduct = (cartItem) => {
@@ -98,11 +122,14 @@ export default function CartScreen() {
             Shopping Cart
           </Text>
         </View>
+
+        {/* coffee items cart container */}
         <View className="mt-5 mb-10">
           <FlatList
             data={listProductCart}
             renderItem={({ item }) => (
               <CoffeeCart
+                setCount={(count) => onUpdateQuantity(item, count)}
                 cartItem={item}
                 setQuantity={(quantity) => setQuantity(item, quantity)}
                 handleRemoveProduct={handleRemoveProduct}
@@ -113,18 +140,54 @@ export default function CartScreen() {
         </View>
       </SafeAreaView>
 
-      {/* coffee items cart container */}
-
-      {/* pay button */}
-      {/* <View style={{ flexDirection: "row", justifyContent: "space-between", paddingHorizontal: 4, marginBottom: 2 }}>
-          <TouchableOpacity
-            style={{ backgroundColor: themeColors.bgLight, padding: 16, borderRadius: 999, flex: 1, marginLeft: 4 }}
-          >
-            <Text style={{ textAlign: "center", color: "white", fontSize: 18, fontWeight: "bold" }}>
-              Next
+      {/* checkout button */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          marginHorizontal: 30,
+          marginBottom: 2,
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            color: themeColors.text,
+            fontSize: 18,
+            fontWeight: "bold",
+            marginRight: 40,
+          }}
+        >
+          Total Amount: ${calculateTotalPrice()}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Payment")}
+          style={{
+            backgroundColor: themeColors.bgDark,
+            padding: 16,
+            borderRadius: 999,
+            flex: 1,
+            marginBottom: 5,
+            alignItems: "center",
+          }}
+        >
+          <View style={{ flexDirection: "row" }}>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "white",
+                fontSize: 18,
+                fontWeight: "bold",
+                marginRight: 5,
+              }}
+            >
+              Checkout
             </Text>
-          </TouchableOpacity>
-        </View> */}
+            <ArrowRight style={{ alignItems: "center", color: "white" }} />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
