@@ -4,7 +4,7 @@
 
 export const categories = [
   {
-    id: 1,
+    id: 1, 
     title: "Cappuccino",
   },
   {
