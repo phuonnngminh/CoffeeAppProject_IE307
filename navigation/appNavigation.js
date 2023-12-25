@@ -20,8 +20,6 @@ import CartScreen from "../screens/CartScreen";
 import ProductDetailsScreen from "../screens/ProductDetailsScreen";
 import { useContext } from "react";
 import { AuthContext } from "../constants/AuthContext";
-import { useState } from "react";
-import PaymentScreen from "../screens/PaymentScreen";
 
 import FavouritesScreen from "../screens/FavouritesScreen";
 import PaymentScreen from "../screens/PaymentScreen";
@@ -35,17 +33,6 @@ LogBox.ignoreLogs([
 
 export default function AppNavigation() {
   const { listProductCart, setListProductCart } = useContext(AuthContext);
-
-  // const checkExists = (item) => {
-  //   const error = {};
-  //   const productExists = listProductCart.some((item) => item );
-  //   if (productExists) {
-  //     Alert.alert("This product is already in your cart");
-  //     return { exists: true };
-  //   }
-  //   return error;
-  // };
-
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -54,16 +41,12 @@ export default function AppNavigation() {
         }}
       >
         <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {({ route }) => (
-            <HomeTabs
-              route={route}
-            />
-          )}
+          {({ route }) => <HomeTabs route={route} />}
         </Stack.Screen>
         <Stack.Screen name="Product Details" options={{ headerShown: false }}>
           {({ route }) => <ProductDetailsScreen route={route} />}
         </Stack.Screen>
-        <Stack.Screen name="Payment" component={PaymentScreen}/>
+        <Stack.Screen name="Payment" component={PaymentScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
