@@ -47,7 +47,9 @@ export default function CartScreen() {
     listProductCart.forEach((cartItem) => {
       total = total + cartItem.quantity * cartItem.item.price;
     });
-    return total;
+    const totalPrice =  parseFloat(total.toFixed(2)); // dua ket qua ve so thap phan 2 chu so tranh thap phan vo han
+    // return total;
+    return totalPrice;
   };
 
   useEffect(() => {
@@ -124,7 +126,7 @@ export default function CartScreen() {
         </View>
 
         {/* coffee items cart container */}
-        <View className="mt-5 mb-10">
+        <View className="mt-5 mb-10 ">
           <FlatList
             data={listProductCart}
             renderItem={({ item }) => (

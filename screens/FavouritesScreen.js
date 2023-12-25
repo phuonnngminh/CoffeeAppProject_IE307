@@ -2,10 +2,11 @@ import { StyleSheet, Text, View, Dimensions, Image, FlatList, TouchableOpacity }
 import { useState, useContext } from 'react'
 import { AuthContext } from '../constants/AuthContext'
 import { StatusBar } from 'expo-status-bar'
-import { BellIcon } from 'react-native-heroicons/outline'
-import { MapPinIcon } from 'react-native-heroicons/solid'
+import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 import {themeColors} from '../theme';
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { XCircle } from "react-native-feather";
+import { useNavigation } from "@react-navigation/native";
 import { StarIcon, NoSymbolIcon, ShoppingBagIcon } from 'react-native-heroicons/solid';
 
 import React from 'react'
@@ -16,7 +17,7 @@ const ios = Platform.OS == 'ios';
 const FavouritesScreen = () => {
 
   const {favouriteItems, setFavouriteItems} = useContext(AuthContext);
-  
+  const navigation = useNavigation();
   const handleRemoveItem = (item) => {
     setFavouriteItems((prev) => prev.filter((favItem) => favItem.id !== item.id));
   };
@@ -24,28 +25,41 @@ const FavouritesScreen = () => {
   
   return (
     <View className="flex-1 relative">
-        <StatusBar />
-        <Image 
-        source={require('../assets/images/beansBackground1.png')} 
-        style={{height: height*1}} 
-        className="w-full absolute -top-5 opacity-10" />
+        <StatusBar style="light" />
+        <Image
+        source={require("../assets/images/beansBackground2.png")}
+        style={{
+          height: 170,
+          borderBottomLeftRadius: 50,
+          borderBottomRightRadius: 50,
+        }}
+        className="w-full absolute"
+      />
 
         <SafeAreaView className={ios? '-mb-8': ''}>
 
-        {/* avatar and bell icon */}
-        <View className="mx-4 flex-row justify-between items-center">
-          <Image source={require('../assets/images/avatar.png')} 
-            className="h-9 w-9 rounded-full" />
-          
-          <View className="flex-row items-center space-x-2">
-            <Text className="font-semibold text-base">
-              Favourites List
-            </Text>
-          </View>
-          <BellIcon size="27" color="black" />
+        <View
+          style={{
+            marginHorizontal: 4,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            style={{ borderRadius: 999 }}
+            onPress={() => navigation.goBack()}
+          >
+            <ArrowLeftCircleIcon size={50} strokeWidth={1.2} color="white" />
+          </TouchableOpacity>
+        </View>
+        <View style={{ paddingHorizontal: 5, spaceY: 2 }}>
+          <Text style={{ fontSize: 40, color: "white", marginLeft: 10 }}>
+            Favourites
+          </Text>
         </View>
 
-        <View className="px-5 mt-6">
+        <View className="px-5 mt-6 ">
          
           <FlatList
             data={favouriteItems}
@@ -61,6 +75,7 @@ const FavouritesScreen = () => {
                                 <Image 
                                     source={item.image} 
                                     className="h-20 w-20 m-5" 
+                                    style={{ paddingHorizontal: 20, marginTop: 15 }}
                                 />
                             </View>
                             
@@ -71,44 +86,36 @@ const FavouritesScreen = () => {
                                 </Text>
                                 
                                 <View style={{backgroundColor: 'rgba(255,255,255,0.2)'}} 
-                                    className="flex-row items-center rounded-3xl px-2 space-x-1 w-16">
-                                    <StarIcon size="13" color="white" />
-                                    <Text className="text-base font-semibold text-white">{item.stars}</Text>
+                                    className="flex-row items-center rounded-3xl px-3 space-x-1 w-16">
+                                    <StarIcon size="10" color="white" />
+                                    <Text className=" font-semibold text-white">{item.stars}</Text>
                                 </View>
 
-                                <Text className="text-white font-bold mt-1 p-1">$ {item.price}</Text>
+                                <Text style={{fontSize: 16}} className="text-white font-bold mt-1 p-1">$ {item.price}</Text>
 
                             </View>
 
                             <TouchableOpacity 
-                                // className={`rounded-full p-2 ml-20 justify-center `}
-                                style={styles.AddCartIcon}
-                                onPress={() => {}}
+                                style={styles.DetailIcon}
+                                onPress={() => navigation.navigate("Product Details", { ...item })}
                             >
                                 <ShoppingBagIcon size="38" color='white' />
                             </TouchableOpacity>
 
                             <TouchableOpacity 
-                                // className={`rounded-full p-2 ml-20 justify-center `}
                                 style={styles.RemoveIcon}
                                 onPress={() => handleRemoveItem(item)}
                             >
-                                <NoSymbolIcon size="38" color='red' />
+                                <XCircle style={{ color: "white" }} />
                             </TouchableOpacity>
 
-                            
                         </View>
-                        
-
                     </View>
 
                 )
             }}
           />
         </View>
-        
-        
-        
         </SafeAreaView>
 
     </View>
@@ -135,18 +142,20 @@ const styles = StyleSheet.create({
     favName:{
         color: 'white',
         padding: 8,
-        fontSize: 15,
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 10,
     },
     RemoveIcon:{
         justifyContent: 'center',
         position: 'absolute',
         right: 20,
-        marginVertical: 35,
+        marginVertical: 15,
     },
-    AddCartIcon:{
+    DetailIcon:{
         justifyContent: 'center',
         position: 'absolute',
-        right: 85,
+        right: 75,
         marginVertical: 35,
     }
 })
