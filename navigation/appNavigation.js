@@ -53,8 +53,10 @@ export default function AppNavigation() {
 }
 
 function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
-  const { listProductCart } = useContext(AuthContext);
+  const { listProductCart, favouriteItems } = useContext(AuthContext);
   const productCount = listProductCart.length;
+  const favouritesCount = favouriteItems.length;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -76,7 +78,19 @@ function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
       })}
     >
       <Tab.Screen name="home">{() => <HomeScreen />}</Tab.Screen>
-      <Tab.Screen name="favourite" component={FavouritesScreen} />
+      <Tab.Screen 
+        name="favourite" 
+        component={FavouritesScreen} 
+        options={{
+          tabBarBadge: favouritesCount > 0 ?favouritesCount : null,
+          tabBarBadgeStyle: {
+            color: 'white',
+            backgroundColor: 'red',
+            fontSize: 12,
+            top: -10, 
+          },
+        }}
+      />
       <Tab.Screen
         name="cart"
         options={{
@@ -85,7 +99,7 @@ function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
             backgroundColor: "red",
             color: "white",
             fontSize: 12,
-            marginBottom: 10,
+            top: -10, 
           },
         }}
       >

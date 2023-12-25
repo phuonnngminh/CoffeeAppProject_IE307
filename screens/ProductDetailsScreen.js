@@ -28,14 +28,14 @@ export default function ProductDetailsScreen({ route }) {
   const [quantity, setQuantity] = useState(1);
   const count = listProductCart.length;
 
-  const {favouriteItems, setFavouriteItems} = useContext(AuthContext);
+  const { favouriteItems, setFavouriteItems } = useContext(AuthContext);
   const [isLiked, setIsLiked] = useState(false);
 
   const ToggleFavourites = (item) => {
     // console.log('doing add favorites');
     if (isLiked) {
       setFavouriteItems(favouriteItems.filter((prevItem) => prevItem.id !== item.id));
-      
+
     } else {
       setFavouriteItems([...favouriteItems, item]);
     }
@@ -97,12 +97,11 @@ export default function ProductDetailsScreen({ route }) {
             <ArrowLeftCircleIcon size="50" strokeWidth={1.2} color="white" />
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            className={`rounded-full border-2 p-2 ${
-              isLiked ? 'border-red-500' : 'border-white'
-            }` }
+          <TouchableOpacity
+            className={`rounded-full border-2 p-2 ${isLiked ? 'border-red-500' : 'border-white'
+              }`}
             onPress={() => ToggleFavourites(item)}>
-              <HeartIcon size="24" color={isLiked ? 'red' : 'white'} /> 
+            <HeartIcon size="24" color={isLiked ? 'red' : 'white'} />
           </TouchableOpacity>
         </View>
         <View
@@ -218,24 +217,24 @@ export default function ProductDetailsScreen({ route }) {
             </Text>
           </View>
           {/* UpDownButton */}
-          <UpDownButton count={quantity} setCount={setQuantity} color={themeColors.text} borderColor={"gray"}/>
+          <UpDownButton count={quantity} setCount={setQuantity} color={themeColors.text} borderColor={"gray"} />
         </View>
-        {/* buy now button */}
+        {/* buy now + add to cart button */}
         <View className="flex-row justify-between px-4">
           <TouchableOpacity
-            style={{ flexDirection: "row", alignItems: "center" }}
+            style={{
+              flexDirection: "row", alignItems: "center", padding: 15,
+              borderRadius: 999,
+              borderWidth: 1,
+              borderColor: "gray",
+            }}
             onPress={() => handleAddToCart(item, size, quantity)}
           >
-            <View
-              style={{
-                padding: 4,
-                borderRadius: 999,
-                borderWidth: 1,
-                borderColor: "gray",
-              }}
-            >
-              <ShoppingBag size={30} color="gray" />
-            </View>
+            <Text className="text-center text-black text-base font-semibold">
+              Add to cart +
+            </Text>
+
+
             <View
               style={{
                 position: "absolute",
@@ -252,6 +251,7 @@ export default function ProductDetailsScreen({ route }) {
               <Text style={{ color: "white", fontSize: 12 }}>{count}</Text>
             </View>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={{ backgroundColor: themeColors.bgLight }}
             className="p-4 rounded-full flex-1 ml-4"

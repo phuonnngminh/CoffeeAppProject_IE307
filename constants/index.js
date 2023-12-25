@@ -1,6 +1,6 @@
 export const categories = [
   {
-    id: 1,
+    id: 1, 
     title: "Cappuccino",
   },
   {
@@ -25,6 +25,8 @@ export const coffeeItems = [
   {
     id: 1,
     name: 'Black Coffee',
+    sizes: {size:[],
+    price:[]},
     price: '25.50',
     volume: '116 ml',
     stars: '4.6',
