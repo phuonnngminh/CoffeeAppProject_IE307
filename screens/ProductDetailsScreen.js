@@ -6,6 +6,7 @@ import {
   Dimensions,
   Platform,
   ScrollView,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +19,8 @@ import { ShoppingBag } from "react-native-feather";
 import UpDownButton from "../components/upDownButton";
 import { useContext } from "react";
 import { AuthContext } from "../constants/AuthContext";
+import { coffeeItems } from "../constants";
+import ReviewCard from "../components/reviewCard";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 
@@ -32,8 +35,26 @@ export default function ProductDetailsScreen({ route }) {
   const { favouriteItems, setFavouriteItems } = useContext(AuthContext);
   const [isLiked, setIsLiked] = useState(false);
 
+  const [expanded, setExpanded] = useState(false);
+  const longDescription = item.desc;
+
+  const slicedReviews = item.reviews.slice(0, 3);
+
+  const generateShortDescription = (longDesc, maxLength) => {
+    if (longDesc.length <= maxLength) {
+      return longDesc;
+    }
+
+    const shortDesc = longDesc.substring(0, maxLength - 3);
+    return shortDesc;
+  };
+  const shortDescription = generateShortDescription(longDescription, 300);
+
+  const toggleDescription = () => {
+    setExpanded(!expanded);
+  };
+
   const ToggleFavourites = (item) => {
-    // console.log('doing add favorites');
     if (isLiked) {
       setFavouriteItems(
         favouriteItems.filter((prevItem) => prevItem.id !== item.id)
@@ -42,7 +63,6 @@ export default function ProductDetailsScreen({ route }) {
       setFavouriteItems([...favouriteItems, item]);
     }
   };
-
 
   const handleSizePress = (size) => {
     setSelectedSize(size);
@@ -76,13 +96,36 @@ export default function ProductDetailsScreen({ route }) {
     console.log("Added to cart");
   };
 
+  const StarRating = ({ rate }) => {
+    const totalStars = 5;
+    const fullStars = Math.floor(rate);
+    const hasHalfStar = rate - fullStars >= 0.5;
+  
+    const renderStars = () => {
+      let stars = [];
+      for (let i = 0; i < fullStars; i++) {
+        stars.push(<StarIcon key={i} name="star" size={20} color="gold" />);
+      }
+      if (hasHalfStar) {
+        stars.push(<StarIcon key={stars.length} name="star-half" size={20} color="gold" />);
+      }
+      const remainingStars = totalStars - stars.length;
+      for (let i = 0; i < remainingStars; i++) {
+        stars.push(<StarIcon key={stars.length + i} name="star" size={20} color="gray" />);
+      }
+      return stars;
+    };
+  
+    return <View style={{ flexDirection: 'row' }}>{renderStars()}</View>;
+  };
+  
+
   useEffect(() => {
     const isItemLiked = favouriteItems.some(
       (favItem) => favItem.id === item.id
     );
     setIsLiked(isItemLiked);
     // console.log("is item in favourites: ",isItemLiked);
-
   }, [favouriteItems]);
 
   return (
@@ -165,12 +208,18 @@ export default function ProductDetailsScreen({ route }) {
                 onPress={() => handleSizePress(item.sizes[0])}
                 style={{
                   backgroundColor:
-                  selectedSize === item.sizes[0]? themeColors.bgLight : "rgba(0,0,0,0.07)",
+                    selectedSize === item.sizes[0]
+                      ? themeColors.bgLight
+                      : "rgba(0,0,0,0.07)",
                 }}
                 className="p-3 px-8 rounded-full"
               >
                 <Text
-                  className={selectedSize === item.sizes[0] ? "text-white" : "text-gray-700"}
+                  className={
+                    selectedSize === item.sizes[0]
+                      ? "text-white"
+                      : "text-gray-700"
+                  }
                 >
                   Small
                 </Text>
@@ -179,12 +228,18 @@ export default function ProductDetailsScreen({ route }) {
                 onPress={() => handleSizePress(item.sizes[1])}
                 style={{
                   backgroundColor:
-                  selectedSize === item.sizes[1] ? themeColors.bgLight : "rgba(0,0,0,0.07)",
+                    selectedSize === item.sizes[1]
+                      ? themeColors.bgLight
+                      : "rgba(0,0,0,0.07)",
                 }}
                 className="p-3 px-8 rounded-full"
               >
                 <Text
-                  className={selectedSize === item.sizes[1] ? "text-white" : "text-gray-700"}
+                  className={
+                    selectedSize === item.sizes[1]
+                      ? "text-white"
+                      : "text-gray-700"
+                  }
                 >
                   Medium
                 </Text>
@@ -193,18 +248,26 @@ export default function ProductDetailsScreen({ route }) {
                 onPress={() => handleSizePress(item.sizes[2])}
                 style={{
                   backgroundColor:
-                  selectedSize === item.sizes[2] ? themeColors.bgLight : "rgba(0,0,0,0.07)",
+                    selectedSize === item.sizes[2]
+                      ? themeColors.bgLight
+                      : "rgba(0,0,0,0.07)",
                 }}
                 className="p-3 px-8 rounded-full"
               >
                 <Text
-                  className={selectedSize === item.sizes[2] ? "text-white" : "text-gray-700"}
+                  className={
+                    selectedSize === item.sizes[2]
+                      ? "text-white"
+                      : "text-gray-700"
+                  }
                 >
                   Large
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
+
+          {/* description */}
           <View className="px-4 space-y-2">
             <Text
               style={{ color: themeColors.text }}
@@ -212,7 +275,53 @@ export default function ProductDetailsScreen({ route }) {
             >
               About
             </Text>
-            <Text className="text-gray-600">{item.desc}</Text>
+            <Text>
+              {expanded ? (
+                <>
+                  {longDescription}
+                  <Text style={{ color: "gray" }} onPress={toggleDescription}>
+                    {" "}
+                    [see less]
+                  </Text>
+                </>
+              ) : (
+                <>
+                  {shortDescription}
+                  <Text style={{ color: "gray" }} onPress={toggleDescription}>
+                    {" "}
+                    ...[see more]
+                  </Text>
+                </>
+              )}
+            </Text>
+          </View>
+
+          {/* review */}
+          <View className="px-4 space-y-2">
+            <View className="flex-row justify-between mb-3">
+              <View>
+                <Text
+                  style={{ color: themeColors.text }}
+                  className="text-lg font-bold"
+                >
+                  Review
+                </Text>
+                <StarRating rate={item.stars}/>
+              </View>
+              <Text
+                style={{ color: "gray" }}
+                className="mt-2"
+                onPress={() => navigation.navigate("Review Screen", { ...item })}
+              >
+                See all &gt;
+              </Text>
+            </View>
+            <View className="mt-5">
+              <FlatList
+                data={slicedReviews}
+                renderItem={({ item }) => <ReviewCard item={item} />}
+              />
+            </View>
           </View>
         </SafeAreaView>
         <View className={`space-y-3 ${ios ? "mb-6" : "mb-3"}`}>
@@ -237,19 +346,20 @@ export default function ProductDetailsScreen({ route }) {
           {/* buy now button */}
           <View className="flex-row justify-between px-4">
             <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center" }}
+              style={{
+                borderRadius: 999,
+                borderWidth: 1,
+                borderColor: "gray",
+              }}
+              className="p-4 rounded-full flex-1 "
               onPress={() => handleAddToCart(item, selectedSize, quantity)}
             >
-              <View
-                style={{
-                  padding: 4,
-                  borderRadius: 999,
-                  borderWidth: 1,
-                  borderColor: "gray",
-                }}
+              <Text
+                style={themeColors.text}
+                className="text-center text-base font-semibold"
               >
-                <ShoppingBag size={30} color="gray" />
-              </View>
+                Add to cart +
+              </Text>
               <View
                 style={{
                   position: "absolute",

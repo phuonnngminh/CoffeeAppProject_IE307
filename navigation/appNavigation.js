@@ -23,6 +23,7 @@ import { AuthContext } from "../constants/AuthContext";
 
 import FavouritesScreen from "../screens/FavouritesScreen";
 import PaymentScreen from "../screens/PaymentScreen";
+import ReviewScreen from "../screens/ReviewScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -45,6 +46,9 @@ export default function AppNavigation() {
         </Stack.Screen>
         <Stack.Screen name="Product Details" options={{ headerShown: false }}>
           {({ route }) => <ProductDetailsScreen route={route} />}
+        </Stack.Screen>
+        <Stack.Screen name="Review Screen" options={{ headerShown: false }}>
+          {({ route }) => <ReviewScreen route={route} />}
         </Stack.Screen>
         <Stack.Screen name="Payment" component={PaymentScreen} />
       </Stack.Navigator>
