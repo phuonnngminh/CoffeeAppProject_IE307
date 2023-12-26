@@ -61,7 +61,7 @@ export default function CoffeeCard({ item }) {
               </Text>
               <Text className="text-base text-white font-semibold">
                 {" "}
-                {item.volume}
+                {item.sizes[0].volume}
               </Text>
             </View>
           </View>
@@ -77,7 +77,7 @@ export default function CoffeeCard({ item }) {
             className="mb-10"
           >
             <Text className="text-white font-bold text-lg ">
-              $ {item.price}
+              $ {item.sizes[0].price}
             </Text>
           </View>
         </View>

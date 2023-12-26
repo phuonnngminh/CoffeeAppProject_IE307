@@ -21,9 +21,9 @@ export default function CoffeeCart(props) {
 
   const calculateProductPrice = (cartItem) => {
     let total = 0;
-      total =  cartItem.quantity * cartItem.item.price;
+    total = cartItem.quantity * cartItem.size.price;
     return total;
-  }
+  };
 
   return (
     <View style={{ padding: 16 }}>
@@ -56,7 +56,7 @@ export default function CoffeeCart(props) {
                 </Text>
                 <View style={{ flexDirection: "row", marginTop: 5 }}>
                   <Text style={{ fontSize: 14, color: "white", opacity: 0.6 }}>
-                    Size: {cartItem.size}
+                    Size: {cartItem.size.size}
                   </Text>
                 </View>
               </View>
@@ -83,7 +83,7 @@ export default function CoffeeCart(props) {
                     marginLeft: 15,
                   }}
                 >
-                 Total: ${calculateProductPrice(cartItem)}
+                  Total: ${calculateProductPrice(cartItem)}
                 </Text>
               </View>
             </View>

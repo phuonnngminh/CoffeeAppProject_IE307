@@ -45,10 +45,9 @@ export default function CartScreen() {
   const calculateTotalPrice = (cartItem) => {
     let total = 0;
     listProductCart.forEach((cartItem) => {
-      total = total + cartItem.quantity * cartItem.item.price;
+      total = total + cartItem.quantity * cartItem.size.price;
     });
-    const totalPrice =  parseFloat(total.toFixed(2)); // dua ket qua ve so thap phan 2 chu so tranh thap phan vo han
-    // return total;
+    const totalPrice = parseFloat(total.toFixed(2));
     return totalPrice;
   };
 
