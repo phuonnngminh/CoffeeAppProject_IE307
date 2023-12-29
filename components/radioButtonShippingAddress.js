@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { themeColors } from "../theme";
 import { PencilIcon } from "react-native-heroicons/solid";
 import { Navigation } from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../constants/AuthContext";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 export default function RadioButtonShippingAddress({
@@ -12,9 +13,10 @@ export default function RadioButtonShippingAddress({
   address,
 }) {
   const [radioSelected, setRadioSelected] = useState(1);
+  const {userData} = useContext(AuthContext);
 
   const products = [
-    { id: 1, nameLocation: "Home", phone: "0911", address: "abc" },
+    { id: 1, nameLocation: "Home", phone: userData.phone, address: `${userData.address.number}, ${userData.address.street}, ${userData.address.city}` },
     { id: 2, nameLocation: "Office", phone: "0923", address: "def" },
   ];
 
