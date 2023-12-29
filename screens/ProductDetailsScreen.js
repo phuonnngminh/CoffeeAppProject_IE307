@@ -320,6 +320,7 @@ export default function ProductDetailsScreen({ route }) {
               <FlatList
                 data={slicedReviews}
                 renderItem={({ item }) => <ReviewCard item={item} />}
+                scrollEnabled={false} //xu ly loi nesting flatlist trong scroll view
               />
             </View>
           </View>

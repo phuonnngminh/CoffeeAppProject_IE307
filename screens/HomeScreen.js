@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 import { themeColors } from "../theme";
 import { StatusBar } from "expo-status-bar";
 import { categories, coffeeItems } from "../constants";
@@ -22,7 +23,7 @@ const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 export default function HomeScreen() {
   const [activeCategory, setActiveCategory] = useState(1);
-
+  const navigation = useNavigation();
   return (
     <View className="flex-1 relative bg-white">
       <StatusBar />
@@ -35,10 +36,12 @@ export default function HomeScreen() {
       <SafeAreaView className={ios ? "-mb-8" : ""}>
         {/* avatar and bell icon */}
         <View className="mx-4 flex-row justify-between items-center">
-          <Image
-            source={require("../assets/images/avatar.png")}
-            className="h-9 w-9 rounded-full"
-          />
+          <TouchableOpacity onPress={() => navigation.navigate("ProfileStack")}>
+            <Image
+              source={require("../assets/images/avatar.png")}
+              className="h-9 w-9 rounded-full"
+            />
+          </TouchableOpacity>
 
           <View className="flex-row items-center space-x-2">
             <MapPinIcon size="25" color={themeColors.bgLight} /> 

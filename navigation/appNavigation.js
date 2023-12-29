@@ -21,6 +21,10 @@ import ProductDetailsScreen from "../screens/ProductDetailsScreen";
 import { useContext } from "react";
 import { AuthContext } from "../constants/AuthContext";
 
+import AuthScreen from "../screens/AuthScreen";
+import LoginScreen from "../screens/LoginScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import EditProfileScreen from "../screens/EditProfileScreen";
 import FavouritesScreen from "../screens/FavouritesScreen";
 import PaymentScreen from "../screens/PaymentScreen";
 import ReviewScreen from "../screens/ReviewScreen";
@@ -33,7 +37,7 @@ LogBox.ignoreLogs([
 ]);
 
 export default function AppNavigation() {
-  const { listProductCart, setListProductCart } = useContext(AuthContext);
+  const { listProductCart, setListProductCart, userData } = useContext(AuthContext);
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -41,19 +45,52 @@ export default function AppNavigation() {
           contentStyle: { backgroundColor: "white" },
         }}
       >
-        <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {({ route }) => <HomeTabs route={route} />}
-        </Stack.Screen>
-        <Stack.Screen name="Product Details" options={{ headerShown: false }}>
-          {({ route }) => <ProductDetailsScreen route={route} />}
-        </Stack.Screen>
-        <Stack.Screen name="Review Screen" options={{ headerShown: false }}>
-          {({ route }) => <ReviewScreen route={route} />}
-        </Stack.Screen>
-        <Stack.Screen name="Payment" component={PaymentScreen} />
+        {userData !== undefined
+          ?(
+            <Stack.Screen name='MainStack' component={MainStack} options={{headerShown: false}}/>
+          )  
+          :(
+            <Stack.Screen name="AuthStack" component={AuthStack} options={{headerShown: false}}/> 
+          )
+        }      
       </Stack.Navigator>
     </NavigationContainer>
   );
+}
+
+const AuthStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Auth" component={AuthScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+    </Stack.Navigator>
+  )
+}
+
+const MainStack = () => {
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      contentStyle: { backgroundColor: "white" },
+    }}
+    > 
+
+      <Stack.Screen name="Home" options={{ headerShown: false }}>
+        {({ route }) => <HomeTabs route={route} />}
+      </Stack.Screen>
+      <Stack.Screen name="Product Details" options={{ headerShown: false }}>
+        {({ route }) => <ProductDetailsScreen route={route} />}
+      </Stack.Screen>
+      <Stack.Screen name="Review Screen" options={{ headerShown: false }}>
+        {({ route }) => <ReviewScreen route={route} />}
+      </Stack.Screen>
+      <Stack.Screen name="Payment" component={PaymentScreen} />
+
+      <Stack.Screen name="ProfileStack" component={ProfileStack} options={{ headerShown: false }}/>
+
+    </Stack.Navigator>
+  )
+  
 }
 
 function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
@@ -144,4 +181,14 @@ const menuIcons = (route, focused) => {
       {icon}
     </View>
   );
+};
+
+const ProfileStack = () => {  
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
+    </Stack.Navigator>
+  )
+  
 };

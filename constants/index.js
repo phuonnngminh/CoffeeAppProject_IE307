@@ -193,3 +193,19 @@ export const coffeeItems = [
     ],
   },
 ];
+
+export const banners = [
+  {
+    image: require('../assets/banners/background.jpg'),
+    title: 'Banner 1',
+  },
+  {
+    image: require('../assets/banners/background2.jpg'),
+    title: 'Banner 2',
+  },
+  {
+    image: require('../assets/banners/background3.jpg'),
+    title: 'Banner 3',
+  },
+  
+]
