@@ -88,7 +88,7 @@ const MainStack = () => {
         {({ route }) => <PaymentScreen route={route} />}
       </Stack.Screen>
       <Stack.Screen name="Profile" options={{ headerShown: false }}>
-        {({ route }) => <ProfileScreenn route={route} />}
+        {({ route }) => <ProfileScreen route={route} />}
       </Stack.Screen>
       <Stack.Screen name="EditProfile" options={{ headerShown: false }}>
         {({ route }) => <EditProfileScreen route={route} />}
