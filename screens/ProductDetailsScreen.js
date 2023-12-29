@@ -30,8 +30,8 @@ export default function ProductDetailsScreen({ route }) {
   const item = route.params;
   const navigation = useNavigation();
   const [quantity, setQuantity] = useState(1);
-  const count = listProductCart.length;
   const [selectedSize, setSelectedSize] = useState(item.sizes[0]);
+  const count = listProductCart.length;
 
   const { favouriteItems, setFavouriteItems } = useContext(AuthContext);
   const [isLiked, setIsLiked] = useState(false);
@@ -103,8 +103,6 @@ export default function ProductDetailsScreen({ route }) {
       size: selectedSize,
       quantity: selectedQuantity,
     };
-    console.log("Added to buy now");
-    console.log(quantity);
   };
 
   useEffect(() => {

@@ -19,33 +19,46 @@ import { themeColors } from "../theme";
 import { ArrowRight } from "react-native-feather";
 
 const { width, height } = Dimensions.get("window");
-const ios = Platform.OS == "ios";
+const ios = Platform.OS === "ios";
 
 export default function CartScreen() {
   const { listProductCart, setListProductCart } = useContext(AuthContext);
   const navigation = useNavigation();
 
+  const handleBuyNow = (item, selectedSize, selectedQuantity) => {
+    const buyNowItem = {
+      item: item,
+      size: selectedSize,
+      quantity: selectedQuantity,
+    };
+  };
+
+  const renderShopNowButton = () => (
+    <TouchableOpacity onPress={() => navigation.navigate("home")}>
+      <Text className="text-lg text-amber-600">Shop Now</Text>
+    </TouchableOpacity>
+  );
+
   const setQuantity = (cartItem, newQuantity) => {
     if (newQuantity === 0) {
       handleRemoveProduct(cartItem);
     }
-    const newListProductCart = [];
-    listProductCart.forEach((oldCartItem) => {
+    const newListProductCart = listProductCart.map((oldCartItem) => {
       if (
-        oldCartItem.item.id == cartItem.item.id &&
-        oldCartItem.size == cartItem.size
+        oldCartItem.item.id === cartItem.item.id &&
+        oldCartItem.size === cartItem.size
       ) {
-        oldCartItem.quantity = newQuantity;
+        return { ...oldCartItem, quantity: newQuantity };
       }
-      newListProductCart.push(oldCartItem);
+      return oldCartItem;
     });
     setListProductCart(newListProductCart);
   };
 
-  const calculateTotalPrice = (cartItem) => {
+  const calculateTotalPrice = () => {
     let total = 0;
     listProductCart.forEach((cartItem) => {
-      total = total + cartItem.quantity * cartItem.size.price;
+      total += cartItem.quantity * cartItem.size.price;
     });
     const totalPrice = parseFloat(total.toFixed(2));
     return totalPrice;
@@ -57,8 +70,8 @@ export default function CartScreen() {
 
   const onUpdateQuantity = (cartItem, newQuantity) => {
     const updatedItems = listProductCart.map((item) => {
-      if (item.id === cartItem.item.id) {
-        item.quantity = newQuantity;
+      if (item.item.id === cartItem.item.id && item.size === cartItem.size) {
+        return { ...item, quantity: newQuantity };
       }
       return item;
     });
@@ -82,7 +95,6 @@ export default function CartScreen() {
               (item) => item.item.id !== cartItem.item.id
             );
             setListProductCart(updatedItems);
-            // calculateTotalPrice();
           },
         },
       ],
@@ -125,7 +137,7 @@ export default function CartScreen() {
         </View>
 
         {/* coffee items cart container */}
-        <View className="mt-5 mb-10 ">
+        <View style={{ marginTop: 5, marginBottom: 10 }}>
           <FlatList
             data={listProductCart}
             renderItem={({ item }) => (
@@ -136,59 +148,74 @@ export default function CartScreen() {
                 handleRemoveProduct={handleRemoveProduct}
               />
             )}
-            style={{ height: "100%" }}
+            keyExtractor={(item) => item.item.id.toString()}
           />
         </View>
-      </SafeAreaView>
 
-      {/* checkout button */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          marginHorizontal: 30,
-          marginBottom: 2,
-        }}
-      >
-        <Text
-          style={{
-            textAlign: "center",
-            color: themeColors.text,
-            fontSize: 18,
-            fontWeight: "bold",
-            marginRight: 40,
-          }}
-        >
-          Total Amount: ${calculateTotalPrice()}
-        </Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Payment")}
-          style={{
-            backgroundColor: themeColors.bgDark,
-            padding: 16,
-            borderRadius: 999,
-            flex: 1,
-            marginBottom: 5,
-            alignItems: "center",
-          }}
-        >
-          <View style={{ flexDirection: "row" }}>
+        {/* Conditional rendering based on listProductCart */}
+        {listProductCart.length > 0 ? (
+          // Checkout button
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              marginHorizontal: 50,
+              marginBottom: 2,
+            }}
+          >
             <Text
               style={{
                 textAlign: "center",
-                color: "white",
-                fontSize: 18,
-                fontWeight: "bold",
-                marginRight: 5,
+                color: themeColors.text,
+                fontSize: 20,
+                marginRight: 40,
               }}
             >
-              Checkout
+              Total: ${calculateTotalPrice()}
             </Text>
-            <ArrowRight style={{ alignItems: "center", color: "white" }} />
+            <TouchableOpacity
+              style={{
+                backgroundColor: themeColors.bgDark,
+                padding: 15,
+                borderRadius: 999,
+                flexDirection: "row",
+                marginBottom: 5,
+                alignItems: "center",
+              }}
+              onPress={() => {
+                handleBuyNow(item, selectedSize, quantity);
+                navigation.navigate("Payment", {
+                  buyNowItem: { item, quantity, size: selectedSize },
+                });
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 20,
+                  marginRight: 5,
+                }}
+              >
+                Checkout
+              </Text>
+              <ArrowRight size={20} color="white" />
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-      </View>
+        ) : (
+          // Empty cart message and Shop Now button
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 20 }}>Your cart is empty !</Text>
+            {renderShopNowButton()}
+          </View>
+        )}
+      </SafeAreaView>
     </View>
   );
 }
