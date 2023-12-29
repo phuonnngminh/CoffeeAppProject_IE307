@@ -87,7 +87,12 @@ const MainStack = () => {
       <Stack.Screen name="Payment" options={{ headerShown: false }}>
         {({ route }) => <PaymentScreen route={route} />}
       </Stack.Screen>
-      <Stack.Screen name="ProfileStack" component={ProfileStack} options={{ headerShown: false }}/>
+      <Stack.Screen name="Profile" options={{ headerShown: false }}>
+        {({ route }) => <ProfileScreenn route={route} />}
+      </Stack.Screen>
+      <Stack.Screen name="EditProfile" options={{ headerShown: false }}>
+        {({ route }) => <EditProfileScreen route={route} />}
+      </Stack.Screen>
 
     </Stack.Navigator>
   )
@@ -184,12 +189,3 @@ const menuIcons = (route, focused) => {
   );
 };
 
-const ProfileStack = () => {  
-  return(
-    <Stack.Navigator>
-      <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }} />
-    </Stack.Navigator>
-  )
-  
-};

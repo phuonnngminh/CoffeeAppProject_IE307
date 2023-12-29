@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { themeColors } from "../theme";
 import { PencilIcon } from "react-native-heroicons/solid";
+import { Navigation } from "react-native-feather";
+import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 export default function RadioButtonShippingAddress({
@@ -20,6 +22,8 @@ export default function RadioButtonShippingAddress({
     setRadioSelected(id);
   };
 
+  const navigation = useNavigation();
+
   return products.map((val) => {
     return (
       <TouchableOpacity
@@ -28,7 +32,7 @@ export default function RadioButtonShippingAddress({
           padding: 15,
           borderRadius: 30,
           backgroundColor: radioSelected === val.id ? "white" : "#E9E9E9",
-          borderColor: radioSelected === val.id ? "white" : "#E9E9E9", 
+          borderColor: radioSelected === val.id ? "white" : "#E9E9E9",
           borderWidth: 2,
           height: ios ? height * 0.1 : height * 0.1,
           shadowColor: "gray",
@@ -102,7 +106,11 @@ export default function RadioButtonShippingAddress({
               </View>
             </View>
           </View>
-          <PencilIcon size={17} color={"black"} />
+          <PencilIcon
+            size={17}
+            color={"black"}
+            onPress={() => navigation.navigate("EditProfile")}
+          />
         </View>
       </TouchableOpacity>
     );
