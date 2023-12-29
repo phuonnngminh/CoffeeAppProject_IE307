@@ -8,7 +8,7 @@ import {
   Dimensions,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { themeColors } from "../theme";
 import { StatusBar } from "expo-status-bar";
@@ -22,11 +22,40 @@ const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 export default function HomeScreen() {
   const [activeCategory, setActiveCategory] = useState(1);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const flatListRef = useRef(null);
+
+  useEffect(() => {
+    const selectedCategory = categories.find(
+      (category) => category.id === activeCategory
+    );
+    if (selectedCategory) {
+      const index = coffeeItems.findIndex(
+        (item) => item.name === selectedCategory.title
+      );
+      if (index !== -1) {
+        setCarouselIndex(index);
+        flatListRef.current.scrollToIndex({
+          animated: true,
+          index: activeCategory - 1,
+          viewPosition: 0.5,
+        });
+      }
+    }
+  }, [activeCategory]);
+
+  const handleCarouselScroll = (newIndex) => {
+    setCarouselIndex(newIndex);
+    const category = coffeeItems[newIndex].name;
+    const selectedCategory = categories.find((item) => item.title === category);
+    if (selectedCategory) {
+      setActiveCategory(selectedCategory.id);
+    }
+  };
 
   return (
     <View className="flex-1 relative bg-white">
       <StatusBar />
-
       <Image
         source={require("../assets/images/beansBackground1.png")}
         style={{ height: height * 0.2 }}
@@ -39,9 +68,8 @@ export default function HomeScreen() {
             source={require("../assets/images/avatar.png")}
             className="h-9 w-9 rounded-full"
           />
-
           <View className="flex-row items-center space-x-2">
-            <MapPinIcon size="25" color={themeColors.bgLight} /> 
+            <MapPinIcon size="25" color={themeColors.bgLight} />
             <Text className="font-semibold text-base">Ho Chi Minh, HCM</Text>
           </View>
           <BellIcon size="27" color="black" />
@@ -64,14 +92,15 @@ export default function HomeScreen() {
         {/* categories */}
         <View className="px-5 mt-6">
           <FlatList
+            className="overflow-visible"
+            ref={flatListRef}
             horizontal
             showsHorizontalScrollIndicator={false}
             data={categories}
             keyExtractor={(item) => item.id}
-            className="overflow-visible"
             renderItem={({ item }) => {
-              isActive = item.id == activeCategory;
-              let activeTextClass = isActive ? "text-white" : "text-gray-700";
+              const isActive = item.id === activeCategory;
+              const activeTextClass = isActive ? "text-white" : "text-gray-700";
               return (
                 <TouchableOpacity
                   onPress={() => setActiveCategory(item.id)}
@@ -102,18 +131,15 @@ export default function HomeScreen() {
           <Carousel
             containerCustomStyle={{ overflow: "visible" }}
             data={coffeeItems}
-            renderItem={({ item }) => (
-              <CoffeeCard
-                item={item}
-              />
-            )}
-            firstItem={1}
+            renderItem={({ item }) => <CoffeeCard item={item} />}
+            firstItem={carouselIndex}
             loop={true}
             inactiveSlideScale={0.75}
             inactiveSlideOpacity={0.75}
             sliderWidth={width}
             itemWidth={width * 0.63}
             slideStyle={{ display: "flex", alignItems: "center" }}
+            onSnapToItem={(index) => handleCarouselScroll(index)}
           />
         </View>
       </View>

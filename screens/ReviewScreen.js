@@ -12,40 +12,12 @@ import {
 import { ArrowLeftCircleIcon, StarIcon } from "react-native-heroicons/outline";
 import { themeColors } from "../theme";
 import ReviewCard from "../components/reviewCard";
+import StarRating from "../components/starRating";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ReviewScreen({ route }) {
   const item = route.params;
-  const StarRating = ({ rate }) => {
-    const totalStars = 5;
-    const fullStars = Math.floor(rate);
-    const hasHalfStar = rate - fullStars >= 0.5;
-
-    const renderStars = () => {
-      let stars = [];
-      for (let i = 0; i < fullStars; i++) {
-        stars.push(<StarIcon key={i} name="star" size={20} color="gold" />);
-      }
-      if (hasHalfStar) {
-        stars.push(
-          <StarIcon
-            key={stars.length}
-            name="star-half"
-            size={20}
-            color="gold"
-          />
-        );
-      }
-      const remainingStars = totalStars - stars.length;
-      for (let i = 0; i < remainingStars; i++) {
-        stars.push(
-          <StarIcon key={stars.length + i} name="star" size={20} color="gray" />
-        );
-      }
-      return stars;
-    };
-
-    return <View style={{ flexDirection: "row" }}>{renderStars()}</View>;
-  };
+  const navigation = useNavigation();
   return (
     <ScrollView>
       <View style={{ flex: 1 }}>
@@ -88,15 +60,15 @@ export default function ReviewScreen({ route }) {
                 / 5
               </Text>
             </View>
-            <StarRating rate={item.stars}/>
+            <StarRating rate={item.stars} size={20}/>
           </View>
 
           <View className="mt-5 px-4">
-              <FlatList
-                data={item.reviews}
-                renderItem={({ item }) => <ReviewCard item={item} />}
-              />
-            </View>
+            <FlatList
+              data={item.reviews}
+              renderItem={({ item }) => <ReviewCard item={item} />}
+            />
+          </View>
         </SafeAreaView>
       </View>
     </ScrollView>

@@ -21,6 +21,7 @@ import { useContext } from "react";
 import { AuthContext } from "../constants/AuthContext";
 import { coffeeItems } from "../constants";
 import ReviewCard from "../components/reviewCard";
+import StarRating from "../components/starRating";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 
@@ -96,235 +97,241 @@ export default function ProductDetailsScreen({ route }) {
     console.log("Added to cart");
   };
 
-  const StarRating = ({ rate }) => {
-    const totalStars = 5;
-    const fullStars = Math.floor(rate);
-    const hasHalfStar = rate - fullStars >= 0.5;
-  
-    const renderStars = () => {
-      let stars = [];
-      for (let i = 0; i < fullStars; i++) {
-        stars.push(<StarIcon key={i} name="star" size={20} color="gold" />);
-      }
-      if (hasHalfStar) {
-        stars.push(<StarIcon key={stars.length} name="star-half" size={20} color="gold" />);
-      }
-      const remainingStars = totalStars - stars.length;
-      for (let i = 0; i < remainingStars; i++) {
-        stars.push(<StarIcon key={stars.length + i} name="star" size={20} color="gray" />);
-      }
-      return stars;
+  const handleBuyNow = (item, selectedSize, selectedQuantity) => {
+    const buyNowItem = {
+      item: item,
+      size: selectedSize,
+      quantity: selectedQuantity,
     };
-  
-    return <View style={{ flexDirection: 'row' }}>{renderStars()}</View>;
+    console.log("Added to buy now");
+    console.log(quantity);
   };
-  
 
   useEffect(() => {
     const isItemLiked = favouriteItems.some(
       (favItem) => favItem.id === item.id
     );
     setIsLiked(isItemLiked);
-    // console.log("is item in favourites: ",isItemLiked);
   }, [favouriteItems]);
 
   return (
-    <ScrollView>
-      <View className="flex-1">
-        <StatusBar style="light" />
-        <Image
-          source={require("../assets/images/beansBackground2.png")}
-          style={{
-            height: 300,
-            borderBottomLeftRadius: 50,
-            borderBottomRightRadius: 50,
-          }}
-          className="w-full absolute"
-        />
-        <SafeAreaView className="space-y-4 flex-1">
-          <View className="mx-4 flex-row justify-between items-center">
-            <TouchableOpacity
-              className=" rounded-full "
-              onPress={() => navigation.goBack()}
-            >
-              <ArrowLeftCircleIcon size="50" strokeWidth={1.2} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              className={`rounded-full border-2 p-2 ${
-                isLiked ? "border-red-500" : "border-white"
-              }`}
-              onPress={() => ToggleFavourites(item)}
-            >
-              <HeartIcon size="24" color={isLiked ? "red" : "white"} />
-            </TouchableOpacity>
-          </View>
-          <View
+    <View className="flex-column h-screen">
+      <ScrollView
+        className="flex-initial"
+        style={{ backgroundColor: "#F5F5F5", marginBottom: 100 }}
+      >
+        <View className="flex-1">
+          <StatusBar style="light" />
+          <Image
+            source={require("../assets/images/beansBackground2.png")}
             style={{
-              shadowColor: themeColors.bgDark,
-              shadowRadius: 30,
-              shadowOffset: { width: 0, height: 30 },
-              shadowOpacity: 0.9,
+              height: 300,
+              borderBottomLeftRadius: 50,
+              borderBottomRightRadius: 50,
             }}
-            className="flex-row justify-center"
-          >
-            <Image
-              source={item.image}
-              className="h-60 w-60"
-              style={{ marginTop: ios ? 0 : 40 }}
-            />
-          </View>
-          <View
-            style={{ backgroundColor: themeColors.bgLight }}
-            className="flex-row justify-center items-center mx-4 rounded-3xl p-1 px-2 space-x-1 opacity-90 w-16"
-          >
-            <StarIcon size="15" color="white" />
-            <Text className="text-base font-semibold text-white">
-              {item.stars}
-            </Text>
-          </View>
-          <View className="px-4 flex-row justify-between items-center">
-            <Text
-              style={{ color: themeColors.text }}
-              className="text-3xl font-semibold"
-            >
-              {item.name}
-            </Text>
-            <Text
-              style={{ color: themeColors.text }}
-              className="text-lg font-semibold"
-            >
-              $ {selectedSize.price}
-            </Text>
-          </View>
-          <View className="px-4 space-y-2">
-            <Text
-              style={{ color: themeColors.text }}
-              className="text-lg font-bold"
-            >
-              Coffee size
-            </Text>
-            <View className="flex-row justify-between">
+            className="w-full absolute"
+          />
+          <SafeAreaView className="space-y-4 flex-1">
+            <View className="mx-4 flex-row justify-between items-center">
               <TouchableOpacity
-                onPress={() => handleSizePress(item.sizes[0])}
-                style={{
-                  backgroundColor:
-                    selectedSize === item.sizes[0]
-                      ? themeColors.bgLight
-                      : "rgba(0,0,0,0.07)",
-                }}
-                className="p-3 px-8 rounded-full"
+                className=" rounded-full "
+                onPress={() => navigation.goBack()}
               >
-                <Text
-                  className={
-                    selectedSize === item.sizes[0]
-                      ? "text-white"
-                      : "text-gray-700"
-                  }
-                >
-                  Small
-                </Text>
+                <ArrowLeftCircleIcon
+                  size="50"
+                  strokeWidth={1.2}
+                  color="white"
+                />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => handleSizePress(item.sizes[1])}
-                style={{
-                  backgroundColor:
-                    selectedSize === item.sizes[1]
-                      ? themeColors.bgLight
-                      : "rgba(0,0,0,0.07)",
-                }}
-                className="p-3 px-8 rounded-full"
+                className={`rounded-full border-2 p-2 ${
+                  isLiked ? "border-red-500" : "border-white"
+                }`}
+                onPress={() => ToggleFavourites(item)}
               >
-                <Text
-                  className={
-                    selectedSize === item.sizes[1]
-                      ? "text-white"
-                      : "text-gray-700"
-                  }
-                >
-                  Medium
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleSizePress(item.sizes[2])}
-                style={{
-                  backgroundColor:
-                    selectedSize === item.sizes[2]
-                      ? themeColors.bgLight
-                      : "rgba(0,0,0,0.07)",
-                }}
-                className="p-3 px-8 rounded-full"
-              >
-                <Text
-                  className={
-                    selectedSize === item.sizes[2]
-                      ? "text-white"
-                      : "text-gray-700"
-                  }
-                >
-                  Large
-                </Text>
+                <HeartIcon size="24" color={isLiked ? "red" : "white"} />
               </TouchableOpacity>
             </View>
-          </View>
-
-          {/* description */}
-          <View className="px-4 space-y-2">
-            <Text
-              style={{ color: themeColors.text }}
-              className="text-lg font-bold"
+            <View
+              style={{
+                shadowColor: themeColors.bgDark,
+                shadowRadius: 30,
+                shadowOffset: { width: 0, height: 30 },
+                shadowOpacity: 0.9,
+              }}
+              className="flex-row justify-center"
             >
-              About
-            </Text>
-            <Text>
-              {expanded ? (
-                <>
-                  {longDescription}
-                  <Text style={{ color: "gray" }} onPress={toggleDescription}>
-                    {" "}
-                    [see less]
-                  </Text>
-                </>
-              ) : (
-                <>
-                  {shortDescription}
-                  <Text style={{ color: "gray" }} onPress={toggleDescription}>
-                    {" "}
-                    ...[see more]
-                  </Text>
-                </>
-              )}
-            </Text>
-          </View>
-
-          {/* review */}
-          <View className="px-4 space-y-2">
-            <View className="flex-row justify-between mb-3">
-              <View>
-                <Text
-                  style={{ color: themeColors.text }}
-                  className="text-lg font-bold"
-                >
-                  Review
-                </Text>
-                <StarRating rate={item.stars}/>
-              </View>
-              <Text
-                style={{ color: "gray" }}
-                className="mt-2"
-                onPress={() => navigation.navigate("Review Screen", { ...item })}
-              >
-                See all &gt;
-              </Text>
-            </View>
-            <View className="mt-5">
-              <FlatList
-                data={slicedReviews}
-                renderItem={({ item }) => <ReviewCard item={item} />}
+              <Image
+                source={item.image}
+                className="h-60 w-60"
+                style={{ marginTop: ios ? 0 : 40 }}
               />
             </View>
-          </View>
-        </SafeAreaView>
-        <View className={`space-y-3 ${ios ? "mb-6" : "mb-3"}`}>
+            <View
+              style={{ backgroundColor: themeColors.bgLight }}
+              className="flex-row justify-center items-center mx-4 rounded-3xl p-1 px-2 space-x-1 opacity-90 w-16"
+            >
+              <StarIcon size="15" color="white" />
+              <Text className="text-base font-semibold text-white">
+                {item.stars}
+              </Text>
+            </View>
+            <View className="px-4 flex-row justify-between items-center">
+              <Text
+                style={{ color: themeColors.text }}
+                className="text-3xl font-semibold"
+              >
+                {item.name}
+              </Text>
+              <Text
+                style={{ color: themeColors.text }}
+                className="text-lg font-semibold"
+              >
+                $ {selectedSize.price}
+              </Text>
+            </View>
+            <View className="px-4 space-y-2">
+              <Text
+                style={{ color: themeColors.text }}
+                className="text-lg font-bold"
+              >
+                Coffee size
+              </Text>
+              <View className="flex-row justify-between">
+                <TouchableOpacity
+                  onPress={() => handleSizePress(item.sizes[0])}
+                  style={{
+                    backgroundColor:
+                      selectedSize === item.sizes[0]
+                        ? themeColors.bgLight
+                        : "rgba(0,0,0,0.07)",
+                  }}
+                  className="p-3 px-8 rounded-full"
+                >
+                  <Text
+                    className={
+                      selectedSize === item.sizes[0]
+                        ? "text-white"
+                        : "text-gray-700"
+                    }
+                  >
+                    Small
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleSizePress(item.sizes[1])}
+                  style={{
+                    backgroundColor:
+                      selectedSize === item.sizes[1]
+                        ? themeColors.bgLight
+                        : "rgba(0,0,0,0.07)",
+                  }}
+                  className="p-3 px-8 rounded-full"
+                >
+                  <Text
+                    className={
+                      selectedSize === item.sizes[1]
+                        ? "text-white"
+                        : "text-gray-700"
+                    }
+                  >
+                    Medium
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleSizePress(item.sizes[2])}
+                  style={{
+                    backgroundColor:
+                      selectedSize === item.sizes[2]
+                        ? themeColors.bgLight
+                        : "rgba(0,0,0,0.07)",
+                  }}
+                  className="p-3 px-8 rounded-full"
+                >
+                  <Text
+                    className={
+                      selectedSize === item.sizes[2]
+                        ? "text-white"
+                        : "text-gray-700"
+                    }
+                  >
+                    Large
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            {/* description */}
+            <View className="px-4 space-y-2">
+              <Text
+                style={{ color: themeColors.text }}
+                className="text-lg font-bold"
+              >
+                About
+              </Text>
+              <Text>
+                {expanded ? (
+                  <>
+                    {longDescription}
+                    <Text style={{ color: "gray" }} onPress={toggleDescription}>
+                      {" "}
+                      [see less]
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    {shortDescription}
+                    <Text style={{ color: "gray" }} onPress={toggleDescription}>
+                      {" "}
+                      ...[see more]
+                    </Text>
+                  </>
+                )}
+              </Text>
+            </View>
+            {/* review */}
+            <View className="px-4 space-y-2">
+              <View className="flex-row justify-between mb-3">
+                <View>
+                  <Text
+                    style={{ color: themeColors.text }}
+                    className="text-lg font-bold"
+                  >
+                    Review
+                  </Text>
+                  <StarRating rate={item.stars} size={20} />
+                </View>
+                <Text
+                  style={{ color: "gray" }}
+                  className="mt-2"
+                  onPress={() =>
+                    navigation.navigate("Review Screen", { ...item })
+                  }
+                >
+                  See all &gt;
+                </Text>
+              </View>
+              <View className="mt-5">
+                <FlatList
+                  data={slicedReviews}
+                  renderItem={({ item }) => <ReviewCard item={item} />}
+                />
+              </View>
+            </View>
+          </SafeAreaView>
+        </View>
+      </ScrollView>
+      <View
+        className="space-y-3"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          backgroundColor: "white",
+          borderRadius: 30,
+          zIndex: 10,
+        }}
+      >
+        <View className={`p-2 ${ios ? "mb-6" : "mb-3"}`}>
           <View className="flex-row justify-between items-center px-4 mb-2">
             <View className="flex-row items-center space-x-1">
               <Text className="text-base text-gray-700 font-semibold opacity-60">
@@ -332,7 +339,7 @@ export default function ProductDetailsScreen({ route }) {
               </Text>
               <Text className="text-base text-black font-semibold">
                 {" "}
-                {item.volume}
+                {selectedSize.volume}
               </Text>
             </View>
             {/* UpDownButton */}
@@ -377,16 +384,34 @@ export default function ProductDetailsScreen({ route }) {
               </View>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ backgroundColor: themeColors.bgLight }}
-              className="p-4 rounded-full flex-1 ml-4"
+              style={{
+                backgroundColor: themeColors.bgLight,
+                padding: 16,
+                borderRadius: 999,
+                flex: 1,
+                marginLeft: 16,
+              }}
+              onPress={() => {
+                handleBuyNow(item, selectedSize, quantity);
+                navigation.navigate("Payment", {
+                  buyNowItem: { item, quantity, size: selectedSize },
+                });
+              }}
             >
-              <Text className="text-center text-white text-base font-semibold">
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
                 Buy now
               </Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }

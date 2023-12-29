@@ -1,6 +1,7 @@
 import React from "react";
 import { SafeAreaView, Text, View, Image } from "react-native";
 import { themeColors } from "../theme";
+import StarRating from "../components/starRating";
 
 export default function ReviewCard({ item }) {
   return (
@@ -12,7 +13,8 @@ export default function ReviewCard({ item }) {
         />
         <View style={{ flex: 1 }}>
           <Text style={{ color: themeColors.text, fontWeight: "bold", marginBottom: 4 }}>{item.username}: </Text>
-          <Text style={{ color: themeColors.text }} numberOfLines={2}>{item.review}</Text>
+          <StarRating rate={4} size={14}/>
+          <Text style={{ color: themeColors.text, marginTop: 3 }} numberOfLines={2}>{item.review}</Text>
         </View>
       </View>
     </SafeAreaView>

@@ -26,7 +26,8 @@ import React from "react";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 
-const FavouritesScreen = () => {
+const FavouritesScreen = ({route}) => {
+  const item = route.param;
   const { favouriteItems, setFavouriteItems } = useContext(AuthContext);
   const navigation = useNavigation();
   const handleRemoveItem = (item) => {
@@ -107,7 +108,7 @@ const FavouritesScreen = () => {
                         style={{ fontSize: 16 }}
                         className="text-white font-bold mt-1 p-1"
                       >
-                        $ {item.price}
+                        $ {item.sizes[0].price}
                       </Text>
                     </View>
 

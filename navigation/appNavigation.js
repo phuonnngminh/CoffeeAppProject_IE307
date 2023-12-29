@@ -50,7 +50,9 @@ export default function AppNavigation() {
         <Stack.Screen name="Review Screen" options={{ headerShown: false }}>
           {({ route }) => <ReviewScreen route={route} />}
         </Stack.Screen>
-        <Stack.Screen name="Payment" component={PaymentScreen} />
+        <Stack.Screen name="Payment" options={{ headerShown: false }}>
+          {({ route }) => <PaymentScreen route={route} />}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
