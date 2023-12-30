@@ -6,37 +6,56 @@ import { fetchUserLogin, fetchUserData } from '../api/api';
 import { AuthContext } from '../constants/AuthContext';
 import { decode, encode } from 'base-64';
 import { jwtDecode } from 'jwt-decode';
+import * as SQLite from 'expo-sqlite';
 
 
 global.atob = decode;
+const db = SQLite.openDatabase('localstorage.db');
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [isFocused, setFocused] = useState(false);
   const [username, setUsername] = useState('johnd');//defaut for testing purposes
   const [password, setPassword] = useState('m38rmF$');//defaut for testing purposes
-  const {token, setToken, userData, setUserData} = useContext(AuthContext);
+  const {userData, setUserData} = useContext(AuthContext);
 
 
   useEffect(()=>{
     //precheck login
-    console.log("token: ", token);
     console.log("userData: ", userData);
     console.log("username: ", username)
     console.log("password: ", password)
   })
+
+  const setData = async (userdata) => {
+    try {
+        await db.transaction(async(tx)=>{
+          tx.executeSql(
+              'INSERT OR REPLACE INTO userlocal (id,user_json_data) values (?,?);', 
+              [1, JSON.stringify(userdata)],
+              (_, { insertId }) => {
+                console.log(`Inserted row with ID ${insertId}`);
+              },
+              (_, error) => {
+                console.error('Error inserting data:', error);
+              }
+          );
+        });
+    } catch (error) {
+        console.log('failed to set data');
+    }
+  }
 
   const handleLogin = () => {
     console.log("inside handleLogin!")
     fetchUserLogin({username, password})
       .then((res) =>{
         Keyboard.dismiss();
-        setToken(res.token);
-        //Ham luu token vao db
         const decodedToken = jwtDecode(res.token);
         fetchUserData(decodedToken.sub)
           .then((userData) => {
             console.log("user data: ",userData)
+            setData(userData); //save user data into db
             setUserData(userData);
           })
           .catch((error) => {

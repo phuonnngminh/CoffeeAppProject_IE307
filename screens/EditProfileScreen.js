@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, Image, TextInput, KeyboardAvoidingView  } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, Image, TextInput, KeyboardAvoidingView,Alert  } from 'react-native'
 import { useContext, useState } from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from '../constants/AuthContext'
@@ -11,10 +11,26 @@ const EditProfileScreen = () => {
   const [editUserData, setEditUserData] = useState(userData);
 
   const handleSave = () => {
-    setUserData(editUserData);
-    console.log("changed user data!")
-    navigation.navigate("Profile")
+    Alert.alert("",
+    "Are you sure you want to save the changes?",
+    [
+      {
+        text: "No",
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: () => {
+          setUserData(editUserData);
+          console.log("changed user data!");
+          navigation.navigate("Profile");
+        },
+      },
+    ],
+    )
+    
   };
+
 
   return (
     <KeyboardAvoidingView behavior="height" enabled keyboardVerticalOffset={10}>

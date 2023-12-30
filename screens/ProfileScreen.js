@@ -1,24 +1,38 @@
-import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, Image  } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, TouchableOpacity, Image, StatusBar  } from 'react-native'
 import { useContext } from 'react'
 import React from 'react'
 import { useNavigation } from "@react-navigation/native";
+import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 import { AuthContext } from '../constants/AuthContext'
 import { ChevronLeftIcon, PencilSquareIcon} from "react-native-heroicons/outline";
+import * as SQLite from 'expo-sqlite';
+import { themeColors } from '../theme';
 
-
+const db = SQLite.openDatabase('localstorage.db');
 
 const ProfileScreen = () => {
     const navigation = useNavigation();
-    const {userData, setUserData, setToken} = useContext(AuthContext);
+    const {userData, setUserData} = useContext(AuthContext);
 
     const capitalizeLetter = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     };
     
     const handleLogout = () => {
-        setToken();
-        setUserData();
-        console.log('logged out');
+        try {
+            db.transaction(async(tx) => {
+              tx.executeSql('DELETE FROM userlocal', [],
+              (txObj, result) => {
+                setUserData();
+                console.log('logged out');
+              },
+              (txObj, error) => console.log(error)
+              )
+            });
+        } catch (error) {
+            console.error('Failed to delete in database')
+        }
+       
     };
 
     function sliceLongText(text, maxLength) {
@@ -31,20 +45,43 @@ const ProfileScreen = () => {
 
     return (
         <ScrollView bounces={false}>
-        <SafeAreaView className="space-y-4 flex-1 ">
-            <View style={styles.headerContainer}>
+        <SafeAreaView className="flex-1 flex-1 relative ">
+            <StatusBar style="light" />
+            <Image
+                source={require("../assets/images/beansBackground2.png")}
+                style={{
+                height: 170,
+                borderBottomLeftRadius: 50,
+                borderBottomRightRadius: 50,
+                }}
+                className="w-full absolute"
+            />
+
+            <View
+            style={{
+                marginHorizontal: 4,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+            }}
+            >
                 <TouchableOpacity
+                    style={{ borderRadius: 999 }}
                     onPress={() => navigation.goBack()}
-                    style={styles.iconContainer}
                 >
-                    <ChevronLeftIcon size={30} strokeWidth={2} color="#ba826a" />
+                    <ArrowLeftCircleIcon size={50} strokeWidth={1.2} color="white" />
                 </TouchableOpacity>
-                <Text style={styles.Title}>Profile</Text>
             </View>
+            <View style={{ paddingHorizontal: 5, spaceY: 2 }}>
+                <Text style={{ fontSize: 40, color: "white", marginLeft: 10, marginBottom: 15 }}>
+                    Profile
+                </Text>
+            </View>
+
             <View style={styles.bodyContainer}>
                 <View style={styles.avatarContainer}>
                     <Image source={require("../assets/images/avatar.jpg")} style={styles.avatarPic}/>
-                    <Text style={styles.Name} numberOfLines={1} ellipsizeMode="tail">
+                    <Text className={themeColors.text} style={styles.Name} numberOfLines={1} ellipsizeMode="tail">
                         {sliceLongText((capitalizeLetter(userData.name.firstname)), 6)} {sliceLongText((capitalizeLetter(userData.name.lastname)), 6)}
                     </Text>
                     <TouchableOpacity
@@ -66,37 +103,37 @@ const ProfileScreen = () => {
                     </View>
 
                     <View style={styles.InfoBox}>
-                        <Text style={styles.infoTitle}>
+                        <Text className={themeColors.text} style={styles.infoTitle}>
                             Username:
                         </Text>
-                        <Text style={styles.infoText}>
+                        <Text className={themeColors.text} style={styles.infoText}>
                             {userData.username}
                         </Text>
                     </View>
 
-                    <View style={styles.InfoBox}>
+                    <View className={themeColors.text} style={styles.InfoBox}>
                         <Text style={styles.infoTitle}>
                             Email:
                         </Text>
-                        <Text style={styles.infoText}>
+                        <Text className={themeColors.text} style={styles.infoText}>
                             {userData.email}
                         </Text>
                     </View>
 
                     <View style={styles.InfoBox}>
-                        <Text style={styles.infoTitle}>
+                        <Text className={themeColors.text} style={styles.infoTitle}>
                             Phone:
                         </Text>
-                        <Text style={styles.infoText}>
+                        <Text className={themeColors.text} style={styles.infoText}>
                             {userData.phone}
                         </Text>
                     </View>
 
                     <View style={styles.InfoBox}>
-                        <Text style={styles.infoTitle}>
+                        <Text className={themeColors.text} style={styles.infoTitle}>
                             Address:
                         </Text>
-                        <Text style={styles.infoText}>
+                        <Text className={themeColors.text} style={styles.infoText}>
                             {userData.address.number}, {userData.address.street}, {userData.address.city}
                         </Text>
                     </View>
@@ -147,6 +184,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 30,
         padding: 15,
+        color: themeColors.text,
     },
     editiconContainer:{
         flex: 1,
@@ -161,9 +199,11 @@ const styles = StyleSheet.create({
     infoTitle:{
         fontWeight: 'bold',
         fontSize: 20,
+        color: themeColors.text,
     },
     infoText:{
         fontSize: 18,
+        color: themeColors.text,
     },
     custombutton:{
         borderWidth: 2,
@@ -172,7 +212,7 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         padding: 15,
         alignSelf: 'center',
-        backgroundColor: "#ba826a",
+        backgroundColor: "#8c5319",
         marginVertical: 20,
       },
       buttonTitle:{

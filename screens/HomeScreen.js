@@ -65,9 +65,9 @@ export default function HomeScreen() {
       <SafeAreaView className={ios ? "-mb-8" : ""}>
         {/* avatar and bell icon */}
         <View className="mx-4 flex-row justify-between items-center">
-          <TouchableOpacity onPress={() => navigation.navigate("ProfileStack")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
             <Image
-              source={require("../assets/images/avatar.png")}
+              source={require("../assets/images/avatar.jpg")}
               className="h-9 w-9 rounded-full"
             />
           </TouchableOpacity>
