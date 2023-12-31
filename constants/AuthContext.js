@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
     try {
         db.transaction(async (tx) => {
             tx.executeSql(
-                'SELECT * FROM userlocal', 
+                'SELECT * FROM userlocaldata', 
                 [],
                 (txObj, result) => {
                     var len = result.rows.length;
@@ -23,8 +23,14 @@ const AuthProvider = ({ children }) => {
                         console.log("row in db: ",result.rows.item(0));
                         console.log('sql lenght: ',len);  
                         const parsedUserData = JSON.parse(result.rows.item(0).user_json_data);
+                        const parsedFavouriteItems = JSON.parse(result.rows.item(0).favouritelist_json_data);
+                        const parsedCartList = JSON.parse(result.rows.item(0).cartlist_json_data)
                         console.log('user data: ',parsedUserData);
+                        console.log('favourites list: ',parsedFavouriteItems);
+                        console.log('cart list: ',parsedCartList);
                         setUserData(parsedUserData);
+                        setFavouriteItems(parsedFavouriteItems);
+                        setListProductCart(parsedCartList);
                     }
                 },
                 (txObj, error) => console.log('cannot get data from db')
@@ -37,7 +43,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(()=>{
     db.transaction(tx => {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS userlocal (id INTEGER PRIMARY KEY, user_json_data TEXT)')
+        tx.executeSql('CREATE TABLE IF NOT EXISTS userlocaldata (id INTEGER PRIMARY KEY, user_json_data TEXT, favouritelist_json_data TEXT, cartlist_json_data TEXT)')
         console.log('passed check table exists');
     });
     getData();
@@ -46,10 +52,12 @@ const AuthProvider = ({ children }) => {
   useEffect(()=>{
     if (userData) {
       const serializedUserData = JSON.stringify(userData);
+      const serializedFavouriteList = JSON.stringify(favouriteItems);
+      const serializedCartList = JSON.stringify(listProductCart);
       db.transaction((tx) => {
         tx.executeSql(
-          'INSERT OR REPLACE INTO userlocal (id,user_json_data) VALUES (?,?);',
-          [1, serializedUserData],
+          'INSERT OR REPLACE INTO userlocaldata (id,user_json_data, favouritelist_json_data, cartlist_json_data) VALUES (?,?,?,?);',
+          [1, serializedUserData, serializedFavouriteList, serializedCartList],
           (txObj, result) => {
             console.log('User data updated in the database.');
           },
@@ -57,7 +65,7 @@ const AuthProvider = ({ children }) => {
         );
       });
     }
-  },[userData]);
+  },[userData, favouriteItems,listProductCart]);
 
 
   return (
