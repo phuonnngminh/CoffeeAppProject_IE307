@@ -31,7 +31,7 @@ const LoginScreen = () => {
     try {
         await db.transaction(async(tx)=>{
           tx.executeSql(
-              'INSERT OR REPLACE INTO userlocal (id,user_json_data) values (?,?);', 
+              'INSERT OR REPLACE INTO userlocaldata (id,user_json_data) values (?,?);', 
               [1, JSON.stringify(userdata)],
               (_, { insertId }) => {
                 console.log(`Inserted row with ID ${insertId}`);

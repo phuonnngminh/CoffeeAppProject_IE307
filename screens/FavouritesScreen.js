@@ -30,6 +30,7 @@ const FavouritesScreen = ({route}) => {
   const item = route.param;
   const { favouriteItems, setFavouriteItems } = useContext(AuthContext);
   const navigation = useNavigation();
+
   const handleRemoveItem = (item) => {
     setFavouriteItems((prev) =>
       prev.filter((favItem) => favItem.id !== item.id)
@@ -37,7 +38,7 @@ const FavouritesScreen = ({route}) => {
   };
 
   return (
-    <View className="flex-1 relative">
+    <View className="flex-1 ">
       <StatusBar style="light" />
       <Image
         source={require("../assets/images/beansBackground2.png")}
@@ -69,8 +70,12 @@ const FavouritesScreen = ({route}) => {
           <Text style={{ fontSize: 40, color: "white", marginLeft: 10 }}>
             Favourites
           </Text>
+
+
         </View>
 
+        
+        {favouriteItems.length > 0 ? (
         <View className="px-5 mt-6 ">
           <FlatList
             data={favouriteItems}
@@ -149,6 +154,18 @@ const FavouritesScreen = ({route}) => {
             }}
           />
         </View>
+        ) : (
+          <View className="px-5 mt-80 justify-center "
+            style={{
+              alignItems: "center", 
+            }}
+          >
+            <Text style={{ fontSize: 20 }}>Your Favourites List is empty !</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("home")}>
+              <Text className="text-lg text-amber-600">Discover Now</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
     </View>
   );

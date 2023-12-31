@@ -12,7 +12,7 @@ const db = SQLite.openDatabase('localstorage.db');
 
 const ProfileScreen = () => {
     const navigation = useNavigation();
-    const {userData, setUserData} = useContext(AuthContext);
+    const {userData, setUserData, setFavouriteItems, setListProductCart} = useContext(AuthContext);
 
     const capitalizeLetter = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -24,6 +24,8 @@ const ProfileScreen = () => {
               tx.executeSql('DELETE FROM userlocal', [],
               (txObj, result) => {
                 setUserData();
+                setFavouriteItems([]);
+                setListProductCart([]);
                 console.log('logged out');
               },
               (txObj, error) => console.log(error)
