@@ -89,27 +89,43 @@ const FavouritesScreen = ({route}) => {
                       </View>
                     </View>
 
-                    <View className="flex-column">
-                      <Text className="font-semibold mb-3" style={styles.favName}>
-                        {item.name}
-                      </Text>
+                    <View className="flex-column justify-center">
+                      <View>
+                        <Text className="font-semibold mb-3" style={styles.favName}>
+                          {item.name}
+                        </Text>
+                      </View>
+
+                      {item.sizes.length > 1 ? (
+                        <View
+                        style={{backgroundColor: "rgba(255,255,255,0.2)",}}
+                        className="flex-row items-center rounded-3xl mb-2 px-2 py-1"
+                        >
+                          <Text style={{ fontSize: 15 }} className="text-white font-semibold">
+                            ${item.sizes[0].price} - ${item.sizes[item.sizes.length -1].price}
+                          </Text>
+                        </View>
+                      ) : (
+                        <View
+                        style={{backgroundColor: "rgba(255,255,255,0.2)",}}
+                        className="flex-row items-center rounded-3xl mb-2 px-2 py-1 w-20"
+                        >
+                          <Text style={{ fontSize: 15 }} className="text-white font-semibold">
+                          $ {item.sizes[0].price}
+                          </Text>
+                        </View>
+                      )}
 
                       <View
                         style={{ backgroundColor: "rgba(255,255,255,0.2)" }}
                         className="flex-row items-center rounded-3xl px-3 space-x-1 w-16 mb-2"
                       >
-                        <StarIcon size="10" color="white" />
+                        <StarIcon size="13" color="white" />
                         <Text className=" font-semibold text-white">
                           {item.stars}
                         </Text>
                       </View>
 
-                      <Text
-                        style={{ fontSize: 16 }}
-                        className="text-white font-bold mt-1 p-1"
-                      >
-                        $ {item.sizes[0].price}
-                      </Text>
                     </View>
 
                     <TouchableOpacity
@@ -170,7 +186,7 @@ const styles = StyleSheet.create({
   DetailIcon: {
     justifyContent: "center",
     position: "absolute",
-    right: 75,
+    right: 60,
     marginVertical: 35,
   },
 });
