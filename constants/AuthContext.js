@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-
+import { bankingCard } from '../constants';
 const AuthContext = createContext(null);
 import * as SQLite from 'expo-sqlite';
 
@@ -10,6 +10,7 @@ const AuthProvider = ({ children }) => {
 
   const [favouriteItems, setFavouriteItems] = useState([]);
   const [userData, setUserData] = useState();
+  const [userCard, setUserCard] = useState(bankingCard)
 
   const getData = () => {
     try {
@@ -69,7 +70,7 @@ const AuthProvider = ({ children }) => {
 
 
   return (
-    <AuthContext.Provider value={{ listProductCart, setListProductCart, favouriteItems, setFavouriteItems, userData, setUserData,}}>
+    <AuthContext.Provider value={{ listProductCart, setListProductCart, favouriteItems, setFavouriteItems, userData, setUserData,userCard, setUserCard}}>
       {children}
     </AuthContext.Provider>
   );

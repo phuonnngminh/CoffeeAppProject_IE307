@@ -209,3 +209,22 @@ export const banners = [
   },
   
 ]
+
+export const bankingCard = [
+  {
+    bankingName: "Standard Chatered",
+    seriNumber: "1234432145677654",
+    cardbackground: require('../assets/cards/Asset4.png'),
+  },
+  {
+    bankingName: "Bank of Asia",
+    seriNumber: "4853432145674891",
+    cardbackground: require('../assets/cards/Asset2.png'),
+  },
+  {
+    bankingName: "PJVN",
+    seriNumber: "9483432145677655",
+    cardbackground: require('../assets/cards/Asset3.png'),
+  },
+
+]
