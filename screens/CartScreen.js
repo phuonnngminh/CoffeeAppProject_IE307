@@ -8,6 +8,7 @@ import {
   Platform,
   FlatList,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
@@ -25,14 +26,6 @@ export default function CartScreen() {
   const { listProductCart, setListProductCart } = useContext(AuthContext);
   const navigation = useNavigation();
 
-  const handleBuyNow = (item, selectedSize, selectedQuantity) => {
-    const buyNowItem = {
-      item: item,
-      size: selectedSize,
-      quantity: selectedQuantity,
-    };
-  };
-
   const renderShopNowButton = () => (
     <TouchableOpacity onPress={() => navigation.navigate("home")}>
       <Text className="text-lg text-amber-600">Shop Now</Text>
@@ -42,11 +35,12 @@ export default function CartScreen() {
   const setQuantity = (cartItem, newQuantity) => {
     if (newQuantity === 0) {
       handleRemoveProduct(cartItem);
+      return;
     }
     const newListProductCart = listProductCart.map((oldCartItem) => {
       if (
         oldCartItem.item.id === cartItem.item.id &&
-        oldCartItem.size === cartItem.size
+        oldCartItem.size.size === cartItem.size.size
       ) {
         return { ...oldCartItem, quantity: newQuantity };
       }
@@ -70,7 +64,10 @@ export default function CartScreen() {
 
   const onUpdateQuantity = (cartItem, newQuantity) => {
     const updatedItems = listProductCart.map((item) => {
-      if (item.item.id === cartItem.item.id && item.size === cartItem.size) {
+      if (
+        item.item.id === cartItem.item.id &&
+        item.size === cartItem.size.size
+      ) {
         return { ...item, quantity: newQuantity };
       }
       return item;
@@ -92,7 +89,9 @@ export default function CartScreen() {
           text: "Yes",
           onPress: () => {
             const updatedItems = listProductCart.filter(
-              (item) => item.item.id !== cartItem.item.id
+              (item) =>
+                item.item.id !== cartItem.item.id ||
+                item.size.size !== cartItem.size.size
             );
             setListProductCart(updatedItems);
           },
@@ -103,7 +102,7 @@ export default function CartScreen() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, justifyContent: "space-between" }}>
       <StatusBar style="light" />
       <Image
         source={require("../assets/images/beansBackground2.png")}
@@ -136,71 +135,91 @@ export default function CartScreen() {
           </Text>
         </View>
 
-        {/* coffee items cart container */}
-        <View style={{ marginTop: 5, marginBottom: 10 }}>
-          <FlatList
-            data={listProductCart}
-            renderItem={({ item }) => (
-              <CoffeeCart
-                setCount={(count) => onUpdateQuantity(item, count)}
-                cartItem={item}
-                setQuantity={(quantity) => setQuantity(item, quantity)}
-                handleRemoveProduct={handleRemoveProduct}
-              />
-            )}
-            keyExtractor={(item) => item.item.id.toString()}
-          />
-        </View>
-
         {/* Conditional rendering based on listProductCart */}
         {listProductCart.length > 0 ? (
-          // Checkout button
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              marginHorizontal: 50,
-              marginBottom: 2,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%",
             }}
           >
-            <Text
+            <ScrollView
+              className="flex-initial"
               style={{
-                textAlign: "center",
-                color: themeColors.text,
-                fontSize: 20,
-                marginRight: 40,
+                backgroundColor: "#F5F5F5",
+                marginBottom: 150,
+                marginTop: 30,
               }}
             >
-              Total: ${calculateTotalPrice()}
-            </Text>
-            <TouchableOpacity
+              {/* coffee items cart container */}
+              <View style={{ marginTop: 5 }}>
+                <FlatList
+                  data={listProductCart}
+                  renderItem={({ item }) => (
+                    <CoffeeCart
+                      setCount={(count) => onUpdateQuantity(item, count)}
+                      cartItem={item}
+                      setQuantity={(quantity) => setQuantity(item, quantity)}
+                      handleRemoveProduct={handleRemoveProduct}
+                    />
+                  )}
+                  keyExtractor={(item) =>
+                    item.item.id.toString() + ":)" + item.size.toString()
+                  }
+                />
+              </View>
+            </ScrollView>
+            <View
+              className="p-4"
               style={{
-                backgroundColor: themeColors.bgDark,
-                padding: 15,
-                borderRadius: 999,
+                position: "absolute",
+                bottom: 60,
+                width: "100%",
+                backgroundColor: "white",
+                borderTopStartRadius: 30,
                 flexDirection: "row",
-                marginBottom: 5,
+                justifyContent: "center",
                 alignItems: "center",
-              }}
-              onPress={() => {
-                handleBuyNow(item, selectedSize, quantity);
-                navigation.navigate("Payment", {
-                  buyNowItem: { item, quantity, size: selectedSize },
-                });
               }}
             >
               <Text
                 style={{
-                  color: "white",
+                  textAlign: "center",
+                  color: themeColors.text,
                   fontSize: 20,
-                  marginRight: 5,
+                  marginRight: 40,
                 }}
               >
-                Checkout
+                Total: ${calculateTotalPrice()}
               </Text>
-              <ArrowRight size={20} color="white" />
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: themeColors.bgDark,
+                  padding: 15,
+                  borderRadius: 999,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+                onPress={() => {
+                  navigation.navigate("Payment", {
+                    buyNowItem: listProductCart,
+                  });
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 20,
+                    marginRight: 5,
+                  }}
+                >
+                  Checkout
+                </Text>
+                <ArrowRight size={20} color="white" />
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
           // Empty cart message and Shop Now button

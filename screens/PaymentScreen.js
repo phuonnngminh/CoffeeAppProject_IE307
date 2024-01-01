@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 import { themeColors } from "../theme";
@@ -15,19 +16,21 @@ import RadioButtonShippingAddress from "../components/radioButtonShippingAddress
 import RadioButtonPayMethod from "../components/radioButtonPayMethod";
 import { Dimensions } from "react-native";
 import { AuthContext } from "../constants/AuthContext";
+import CheckoutItem from "../components/checkoutItem";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 export default function PaymentScreen({ route }) {
   const { buyNowItem } = route.params;
   const navigation = useNavigation();
-  const {userCard, setUserCard} = useContext(AuthContext); // bien context nay chua cac object la thong tin của các the ngan hang..
+  const { userCard, setUserCard } = useContext(AuthContext); // bien context nay chua cac object la thong tin của các the ngan hang..
 
   const calculateProductPrice = (buyNowItem) => {
-      let total = 0;
-      total = buyNowItem.quantity * buyNowItem.size.price;
-      return total;
+    let total = 0;
+    buyNowItem.forEach((element) => {
+      total += element.quantity * element.size.price;
+    });
+    return total;
   };
-  
 
   const shippingAddress = useMemo(
     () => [
@@ -69,7 +72,11 @@ export default function PaymentScreen({ route }) {
     <View className="flex-column h-screen">
       <ScrollView
         className="flex-initial"
-        style={{ backgroundColor: "#F5F5F5", marginBottom: 100, height: "100%" }}
+        style={{
+          backgroundColor: "#F5F5F5",
+          marginBottom: 200,
+          height: "100%",
+        }}
       >
         <View style={{ flex: 1 }}>
           <StatusBar style="light" />
@@ -130,6 +137,27 @@ export default function PaymentScreen({ route }) {
                   fontWeight: "bold",
                 }}
               >
+                Checkout Item
+              </Text>
+            </View>
+            <View style={{ paddingHorizontal: 10, marginTop: 10, spaceY: 2 }}>
+                <FlatList
+                  data={buyNowItem}
+                  renderItem={({ item }) => (
+                    <CheckoutItem
+                      cartItem={item}
+                    />
+                  )}
+                />
+            </View>
+            <View style={{ paddingHorizontal: 10, marginTop: 10, spaceY: 2 }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  color: themeColors.text,
+                  fontWeight: "bold",
+                }}
+              >
                 Payment method
               </Text>
             </View>
@@ -158,21 +186,24 @@ export default function PaymentScreen({ route }) {
           </View>
           <View>
             <Text className="text-base text-black">$10</Text>
-            <Text className="text-base text-black">${calculateProductPrice(buyNowItem)}</Text>
-            <Text className="text-xl text-black font-semibold">${calculateProductPrice(buyNowItem)+ 10}</Text>
+            <Text className="text-base text-black">
+              ${calculateProductPrice(buyNowItem)}
+            </Text>
+            <Text className="text-xl text-black font-semibold">
+              ${calculateProductPrice(buyNowItem) + 10}
+            </Text>
           </View>
         </View>
 
         <TouchableOpacity
           style={{ backgroundColor: themeColors.bgLight }}
           className="p-4 rounded-full flex-1 ml-4"
-          onPress={() => navigation.navigate("Payment", { ...item })}
+          onPress={() => navigation.navigate("PaymentDone")}
         >
           <Text className="text-center text-white text-base font-semibold">
             Payment
           </Text>
         </TouchableOpacity>
-
       </View>
     </View>
   );

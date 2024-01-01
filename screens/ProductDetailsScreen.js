@@ -393,7 +393,7 @@ export default function ProductDetailsScreen({ route }) {
               onPress={() => {
                 handleBuyNow(item, selectedSize, quantity);
                 navigation.navigate("Payment", {
-                  buyNowItem: { item, quantity, size: selectedSize },
+                  buyNowItem: [{ item, quantity, size: selectedSize }],
                 });
               }}
             >

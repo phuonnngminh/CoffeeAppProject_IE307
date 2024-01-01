@@ -30,6 +30,7 @@ import AddBankingCardScreen from "../screens/AddBankingCardScreen";
 import FavouritesScreen from "../screens/FavouritesScreen";
 import PaymentScreen from "../screens/PaymentScreen";
 import ReviewScreen from "../screens/ReviewScreen";
+import PaymentDoneScreen from "../screens/PaymentDoneScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,7 +40,8 @@ LogBox.ignoreLogs([
 ]);
 
 export default function AppNavigation() {
-  const { listProductCart, setListProductCart, userData } = useContext(AuthContext);
+  const { listProductCart, setListProductCart, userData } =
+    useContext(AuthContext);
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -47,14 +49,19 @@ export default function AppNavigation() {
           contentStyle: { backgroundColor: "white" },
         }}
       >
-        {userData !== undefined
-          ?(
-            <Stack.Screen name='MainStack' component={MainStack} options={{headerShown: false}}/>
-          )  
-          :(
-            <Stack.Screen name="AuthStack" component={AuthStack} options={{headerShown: false}}/> 
-          )
-        }      
+        {userData !== undefined ? (
+          <Stack.Screen
+            name="MainStack"
+            component={MainStack}
+            options={{ headerShown: false }}
+          />
+        ) : (
+          <Stack.Screen
+            name="AuthStack"
+            component={AuthStack}
+            options={{ headerShown: false }}
+          />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -63,20 +70,27 @@ export default function AppNavigation() {
 const AuthStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Auth" component={AuthScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+      <Stack.Screen
+        name="Auth"
+        component={AuthScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
 const MainStack = () => {
   return (
     <Stack.Navigator
-    screenOptions={{
-      contentStyle: { backgroundColor: "white" },
-    }}
-    > 
-
+      screenOptions={{
+        contentStyle: { backgroundColor: "white" },
+      }}
+    >
       <Stack.Screen name="Home" options={{ headerShown: false }}>
         {({ route }) => <HomeTabs route={route} />}
       </Stack.Screen>
@@ -101,12 +115,12 @@ const MainStack = () => {
       <Stack.Screen name="AddBankingCard" options={{ headerShown: false }}>
         {({ route }) => <AddBankingCardScreen route={route} />}
       </Stack.Screen>
-
-
+      <Stack.Screen name="PaymentDone" options={{ headerShown: false }}>
+        {({ route }) => <PaymentDoneScreen route={route} />}
+      </Stack.Screen>
     </Stack.Navigator>
-  )
-  
-}
+  );
+};
 
 function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
   const { listProductCart, favouriteItems } = useContext(AuthContext);
@@ -134,16 +148,16 @@ function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
       })}
     >
       <Tab.Screen name="home">{() => <HomeScreen />}</Tab.Screen>
-      <Tab.Screen 
-        name="favourite" 
-        component={FavouritesScreen} 
+      <Tab.Screen
+        name="favourite"
+        component={FavouritesScreen}
         options={{
-          tabBarBadge: favouritesCount > 0 ?favouritesCount : null,
+          tabBarBadge: favouritesCount > 0 ? favouritesCount : null,
           tabBarBadgeStyle: {
-            color: 'white',
-            backgroundColor: 'red',
+            color: "white",
+            backgroundColor: "red",
             fontSize: 12,
-            top: -10, 
+            top: -10,
           },
         }}
       />
@@ -155,7 +169,7 @@ function HomeTabs({ handleAddToCart, size, quantity, setQuantity }) {
             backgroundColor: "red",
             color: "white",
             fontSize: 12,
-            top: -10, 
+            top: -10,
           },
         }}
       >
@@ -197,4 +211,3 @@ const menuIcons = (route, focused) => {
     </View>
   );
 };
-

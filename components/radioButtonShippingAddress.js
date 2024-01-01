@@ -109,7 +109,7 @@ export default function RadioButtonShippingAddress({
             </View>
           </View>
           <PencilIcon
-            size={17}
+            size={20}
             color={"black"}
             onPress={() => navigation.navigate("EditProfile")}
           />
