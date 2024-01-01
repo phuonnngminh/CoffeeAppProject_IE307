@@ -25,6 +25,8 @@ import AuthScreen from "../screens/AuthScreen";
 import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from "../screens/EditProfileScreen";
+import BankingCardScreen from "../screens/BankingCardScreen";
+import AddBankingCardScreen from "../screens/AddBankingCardScreen";
 import FavouritesScreen from "../screens/FavouritesScreen";
 import PaymentScreen from "../screens/PaymentScreen";
 import ReviewScreen from "../screens/ReviewScreen";
@@ -93,6 +95,13 @@ const MainStack = () => {
       <Stack.Screen name="EditProfile" options={{ headerShown: false }}>
         {({ route }) => <EditProfileScreen route={route} />}
       </Stack.Screen>
+      <Stack.Screen name="BankingCard" options={{ headerShown: false }}>
+        {({ route }) => <BankingCardScreen route={route} />}
+      </Stack.Screen>
+      <Stack.Screen name="AddBankingCard" options={{ headerShown: false }}>
+        {({ route }) => <AddBankingCardScreen route={route} />}
+      </Stack.Screen>
+
 
     </Stack.Navigator>
   )

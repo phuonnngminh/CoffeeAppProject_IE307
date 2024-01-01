@@ -22,7 +22,8 @@ export default function CoffeeCart(props) {
   const calculateProductPrice = (cartItem) => {
     let total = 0;
     total = cartItem.quantity * cartItem.size.price;
-    return total;
+    const totalPrice = parseFloat(total.toFixed(2));
+    return totalPrice;
   };
 
   return (
@@ -80,7 +81,7 @@ export default function CoffeeCart(props) {
                     color: "white",
                     fontWeight: "bold",
                     marginTop: 15,
-                    marginLeft: 15,
+                    marginLeft: 5,
                   }}
                 >
                   Total: ${calculateProductPrice(cartItem)}

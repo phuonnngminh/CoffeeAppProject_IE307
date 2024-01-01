@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   Image,
@@ -14,11 +14,13 @@ import { themeColors } from "../theme";
 import RadioButtonShippingAddress from "../components/radioButtonShippingAddress";
 import RadioButtonPayMethod from "../components/radioButtonPayMethod";
 import { Dimensions } from "react-native";
+import { AuthContext } from "../constants/AuthContext";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 export default function PaymentScreen({ route }) {
   const { buyNowItem } = route.params;
   const navigation = useNavigation();
+  const {userCard, setUserCard} = useContext(AuthContext); // bien context nay chua cac object la thong tin của các the ngan hang..
 
   const calculateProductPrice = (buyNowItem) => {
       let total = 0;

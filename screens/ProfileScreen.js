@@ -4,7 +4,7 @@ import React from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { ArrowLeftCircleIcon } from "react-native-heroicons/outline";
 import { AuthContext } from '../constants/AuthContext'
-import { ChevronLeftIcon, PencilSquareIcon} from "react-native-heroicons/outline";
+import { ChevronRightIcon, PencilSquareIcon} from "react-native-heroicons/outline";
 import * as SQLite from 'expo-sqlite';
 import { themeColors } from '../theme';
 
@@ -47,7 +47,7 @@ const ProfileScreen = () => {
 
     return (
         <ScrollView bounces={false}>
-        <SafeAreaView className="flex-1 flex-1 relative ">
+        <SafeAreaView className="flex-1 relative ">
             <StatusBar style="light" />
             <Image
                 source={require("../assets/images/beansBackground2.png")}
@@ -95,6 +95,16 @@ const ProfileScreen = () => {
                 </View>
 
                 <View className="my-3">
+
+                    <View style={styles.MyCardBox}>
+                        <TouchableOpacity className="flex-row justify-between" onPress={()=>navigation.navigate("BankingCard")}>
+                            <Text style={styles.infoTitle}>
+                                My Cards
+                            </Text>
+                            <ChevronRightIcon size={28} strokeWidth={3} color="#ba826a"/>
+                        </TouchableOpacity>
+                    </View>
+
                     <View style={styles.InfoBox}>
                         <Text style={styles.infoTitle}>
                             Name:
@@ -193,6 +203,13 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         
     },
+    MyCardBox:{
+        paddingVertical: 13,
+        borderBottomWidth: 2,
+        borderBottomColor: '#ba826a',
+        borderTopWidth: 2,
+        borderTopColor: '#ba826a',
+    },
     InfoBox:{
         paddingVertical: 13,
         borderBottomWidth: 1,
@@ -217,12 +234,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#8c5319",
         marginVertical: 20,
       },
-      buttonTitle:{
+    buttonTitle:{
         alignSelf: "center",
         color: "white",
         fontWeight: "bold",
         fontSize: 17,
-      },
+    },
 
     
 })
