@@ -21,7 +21,7 @@ const ProfileScreen = () => {
     const handleLogout = () => {
         try {
             db.transaction(async(tx) => {
-              tx.executeSql('DELETE FROM userlocal', [],
+              tx.executeSql('DELETE FROM userlocaldata', [],
               (txObj, result) => {
                 setUserData();
                 setFavouriteItems([]);
