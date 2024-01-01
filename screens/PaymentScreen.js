@@ -143,6 +143,7 @@ export default function PaymentScreen({ route }) {
             <View style={{ paddingHorizontal: 10, marginTop: 10, spaceY: 2 }}>
                 <FlatList
                   data={buyNowItem}
+                  scrollEnabled={false}
                   renderItem={({ item }) => (
                     <CheckoutItem
                       cartItem={item}
