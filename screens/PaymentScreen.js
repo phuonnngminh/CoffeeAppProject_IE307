@@ -20,7 +20,7 @@ import CheckoutItem from "../components/checkoutItem";
 const { width, height } = Dimensions.get("window");
 const ios = Platform.OS == "ios";
 export default function PaymentScreen({ route }) {
-  const { buyNowItem } = route.params;
+  const { listCartItemCheckout } = route.params;
   const navigation = useNavigation();
   const { userCard, setUserCard } = useContext(AuthContext); // bien context nay chua cac object la thong tin của các the ngan hang..
 
@@ -141,14 +141,9 @@ export default function PaymentScreen({ route }) {
               </Text>
             </View>
             <View style={{ paddingHorizontal: 10, marginTop: 10, spaceY: 2 }}>
-                <FlatList
-                  data={buyNowItem}
-                  renderItem={({ item }) => (
-                    <CheckoutItem
-                      cartItem={item}
-                    />
-                  )}
-                />
+              {listCartItemCheckout.map((cartItem) => (
+                <CheckoutItem cartItem={cartItem} key={cartItem.item.id + "_" + cartItem.size.size} />
+              ))}
             </View>
             <View style={{ paddingHorizontal: 10, marginTop: 10, spaceY: 2 }}>
               <Text
@@ -187,10 +182,10 @@ export default function PaymentScreen({ route }) {
           <View>
             <Text className="text-base text-black">$10</Text>
             <Text className="text-base text-black">
-              ${calculateProductPrice(buyNowItem)}
+              ${calculateProductPrice(listCartItemCheckout)}
             </Text>
             <Text className="text-xl text-black font-semibold">
-              ${calculateProductPrice(buyNowItem) + 10}
+              ${calculateProductPrice(listCartItemCheckout) + 10}
             </Text>
           </View>
         </View>

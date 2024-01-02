@@ -8,7 +8,7 @@ import {
   Platform,
   FlatList,
   Alert,
-  ScrollView,
+  ScrollView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
@@ -155,20 +155,17 @@ export default function CartScreen() {
             >
               {/* coffee items cart container */}
               <View style={{ marginTop: 5 }}>
-                <FlatList
-                  data={listProductCart}
-                  renderItem={({ item }) => (
-                    <CoffeeCart
-                      setCount={(count) => onUpdateQuantity(item, count)}
-                      cartItem={item}
-                      setQuantity={(quantity) => setQuantity(item, quantity)}
-                      handleRemoveProduct={handleRemoveProduct}
-                    />
-                  )}
-                  keyExtractor={(item) =>
-                    item.item.id.toString() + ":)" + item.size.toString()
-                  }
-                />
+                {listProductCart.map((item) => (
+                  <CoffeeCart
+                    setCount={(count) => onUpdateQuantity(item, count)}
+                    cartItem={item}
+                    setQuantity={(quantity) => setQuantity(item, quantity)}
+                    handleRemoveProduct={handleRemoveProduct}
+                    key={
+                      item.item.id.toString() + ":)" + item.size.size.toString()
+                    }
+                  />
+                ))}
               </View>
             </ScrollView>
             <View
@@ -204,7 +201,7 @@ export default function CartScreen() {
                 }}
                 onPress={() => {
                   navigation.navigate("Payment", {
-                    buyNowItem: listProductCart,
+                    listCartItemCheckout: listProductCart,
                   });
                 }}
               >

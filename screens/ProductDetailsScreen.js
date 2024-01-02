@@ -312,7 +312,7 @@ export default function ProductDetailsScreen({ route }) {
                 <FlatList
                   data={slicedReviews}
                   renderItem={({ item }) => <ReviewCard item={item} />}
-                  scrollEnabled={false} 
+                  scrollEnabled={false}
                 />
               </View>
             </View>
@@ -393,7 +393,9 @@ export default function ProductDetailsScreen({ route }) {
               onPress={() => {
                 handleBuyNow(item, selectedSize, quantity);
                 navigation.navigate("Payment", {
-                  buyNowItem: [{ item, quantity, size: selectedSize }],
+                  listCartItemCheckout: [
+                    { item, quantity, size: selectedSize },
+                  ],
                 });
               }}
             >
