@@ -13,6 +13,7 @@ import { ArrowLeftCircleIcon, StarIcon } from "react-native-heroicons/outline";
 import { themeColors } from "../theme";
 import ReviewCard from "../components/reviewCard";
 import { useNavigation } from "@react-navigation/native";
+import StarRating from "../components/starRating";
 
 export default function ReviewScreen({ route }) {
   const item = route.params;
@@ -59,16 +60,16 @@ export default function ReviewScreen({ route }) {
                 / 5
               </Text>
             </View>
-            <StarRating rate={item.stars} size={20}/>
+            <StarRating rate={item.stars} size={20} />
           </View>
 
           <View className="mt-5 px-4">
-              <FlatList
-                data={item.reviews}
-                renderItem={({ item }) => <ReviewCard item={item} />}
-                scrollEnabled={false} //xu ly loi nesting flatlist trong scroll view
-              />
-            </View>
+            <FlatList
+              data={item.reviews}
+              renderItem={({ item }) => <ReviewCard item={item} />}
+              scrollEnabled={false}
+            />
+          </View>
         </SafeAreaView>
       </View>
     </ScrollView>
